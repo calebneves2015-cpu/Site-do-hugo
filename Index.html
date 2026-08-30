@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hugo Uggo Store!</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            text-align: center;
+        }
+
+        header {
+            background: #222;
+            padding: 25px 10px;
+            border-bottom: 2px solid #444;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header p {
+            color: #ccc;
+        }
+
+        .botao {
+            display: inline-block;
+            background: #fff;
+            color: #111;
+            padding: 14px 25px;
+            margin: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .botao:hover {
+            transform: scale(1.05);
+        }
+
+        .produtos {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px 15px;
+        }
+
+        .produto {
+            background: #222;
+            width: 250px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px #000;
+        }
+
+        .produto h2 {
+            margin-top: 0;
+        }
+
+        .preco {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px;
+        }
+
+        .comprar {
+            display: inline-block;
+            background: #fff;
+            color: #111;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            background: #222;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Hugo Uggo Store! 🛒</h1>
+
+        <p>Confira a loja clicando neste botão:</p>
+
+        <a class="botao" href="#loja">
+            🛍️ Conferir Loja
+        </a>
+    </header>
+
+    <section id="loja">
+
+        <h2>🔥 Produtos</h2>
+
+        <div class="produtos">
+
+            <div class="produto">
+    <h2>📦 Onde entregar?</h2>
+
+    <p>📍 Onde você mora?</p>
+    <input id="cidade" type="text" placeholder="Cidade ou região">
+
+    <p>🏠 Qual é a sua rua?</p>
+    <input id="rua" type="text" placeholder="Sua rua">
+
+    <br><br>
+
+    <button class="comprar" onclick="enviarPedido()">
+        Enviar pedido 📩
+    </button>
+</div>
+
+<script>
+function enviarPedido() {
+    const cidade = document.getElementById("cidade").value.trim();
+    const rua = document.getElementById("rua").value.trim();
+
+    if (!cidade || !rua) {
+        alert("Preencha a cidade/região e a rua!");
+        return;
+    }
+
+    const mensagem =
+        "🛍️ Novo pedido - Hugo Uggo Store!%0A%0A" +
+        "📍 Cidade/região: " + encodeURIComponent(cidade) + "%0A" +
+        "🏠 Rua: " + encodeURIComponent(rua);
+
+    // Troque SEUNUMERO pelo número autorizado da sua mãe,
+    // incluindo DDI +55 e DDD, sem espaços ou símbolos.
+    const numero = "55SEUNUMERO";
+
+    window.open(
+        "https://wa.me/" + numero + "?text=" + mensagem,
+        "_blank"
+    );
+}
+</script>
+
+            <div class="produto">
+    <h2>Escolha seus Hugos aqui! 🧸</h2>
+    <p>Escolha seu Hugo favorito e compre!</p>
+
+    <button class="comprar" onclick="mostrarHugos()">
+        Escolher Hugos 🛍️
+    </button>
+            </div>
+
+            <div class="produto">
+    <h2>Pacote aleatório Hugo Uggo! 🎁</h2>
+    <p>3 Hugos aleatórios, inclusive, um muito raro de vir!</p>
+    <div class="preco">R$ 4,50</div>
+
+    <a class="comprar" href="#">
+        Comprar
+    </a>
+            </div>
+
+        </div>
+
+    </section>
+
+    <footer>
+        © 2026 Hugo Uggo Store! 🛒
+    </footer>
+<!-- Página de escolha dos Hugos -->
+<section id="paginaHugos" style="display: none;">
+
+    <h1>Escolhe e compre! 🛍️</h1>
+    <p>Escolha um dos nossos Hugos:</p>
+
+    <div class="produtos">
+
+        <div class="produto">
+            <h2>Hugo 1 🔵</h2>
+            <p>Um Hugo especial para você!</p>
+            <div class="preco">R$ 7,00</div>
+            <a class="comprar" href="#">Comprar</a>
+        </div>
+
+        <div class="produto">
+            <h2>Hugo 2 🔵</h2>
+            <p>Um Hugo especial para você!</p>
+            <div class="preco">R$ 5,00</div>
+            <a class="comprar" href="#">Comprar</a>
+        </div>
+
+        <div class="produto">
+            <h2>Hugo 3 🔵</h2>
+            <p>Um Hugo especial para você!</p>
+            <div class="preco">R$ 2,00</div>
+            <a class="comprar" href="#">Comprar</a>
+        </div>
+
+        <div class="produto">
+            <h2>Hugo 4 🔵</h2>
+            <p>Um Hugo especial para você!</p>
+            <div class="preco">R$ 12,50</div>
+            <a class="comprar" href="#">Comprar</a>
+        </div>
+
+        <div class="produto">
+            <h2>Hugo 5 🔵</h2>
+            <p>Um Hugo especial para você!</p>
+            <div class="preco">R$ 4,00</div>
+            <a class="comprar" href="#">Comprar</a>
+        </div>
+
+    </div>
+
+    <button class="botao" onclick="voltarLoja()">
+        ← Voltar para a loja
+    </button>
+
+</section>
+
+<script>
+
+function mostrarHugos() {
+    document.getElementById("loja").style.display = "none";
+    document.getElementById("paginaHugos").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+function voltarLoja() {
+    document.getElementById("paginaHugos").style.display = "none";
+    document.getElementById("loja").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+</script>
+</body>
+</html>
