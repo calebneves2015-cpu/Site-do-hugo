@@ -1195,4 +1195,59 @@ function atualizarPerfilLoja() {
 
     const sobrenome =
         localStorage.getItem(
-            "sobr
+            "sobrenomeUsuario"
+        );
+
+
+    if (emoji) {
+
+        document.getElementById(
+            "emojiLoja"
+        ).textContent =
+            emoji;
+
+    }
+
+
+    if (nome) {
+
+        let nomeCompleto =
+            nome;
+
+
+        if (sobrenome) {
+
+            nomeCompleto +=
+                " " +
+                sobrenome;
+
+        }
+
+
+        document.getElementById(
+            "nomeLoja"
+        ).textContent =
+            nomeCompleto;
+
+    }
+
+}
+
+
+/* =====================================
+   CARREGAR PERFIL
+===================================== */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        atualizarPerfilLoja();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
