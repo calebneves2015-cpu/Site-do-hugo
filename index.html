@@ -7,6 +7,11 @@
     <title>Hugo Uggo Store!</title>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -32,18 +37,16 @@
 
         .botao {
             display: inline-block;
-            background: #fff;
+            background: white;
             color: #111;
             padding: 14px 25px;
             margin: 15px;
             border-radius: 12px;
             text-decoration: none;
             font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .botao:hover {
-            transform: scale(1.05);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
         }
 
         .produtos {
@@ -73,13 +76,14 @@
         }
 
         .comprar {
-            display: inline-block;
-            background: #fff;
+            background: white;
             color: #111;
             padding: 10px 20px;
             border-radius: 10px;
-            text-decoration: none;
+            border: none;
             font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
         }
 
         footer {
@@ -88,160 +92,1107 @@
             background: #222;
             color: #aaa;
         }
+
+        /* PERFIL NA LOJA */
+
+        #perfilLoja {
+            background: #1d1d1d;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px;
+        }
+
+        /* PÁGINA DOS HUGOS */
+
+        #paginaHugos {
+            display: none;
+        }
+
+        /* JANELA DE COMPRA */
+
+        #janelaCompra {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 15px;
+        }
+
+        .caixaCompra {
+            background: white;
+            color: #111;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .caixaCompra input,
+        .caixaCompra select {
+            width: 100%;
+            padding: 12px;
+            margin: 7px 0;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .caixaCompra button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .botaoSim {
+            background: #25D366;
+            color: white;
+        }
+
+        .botaoNao {
+            background: #ddd;
+            color: #111;
+        }
+
+        #formularioPedido {
+            display: none;
+        }
+
+        /* PERFIL */
+
+        #telaPerfil {
+            background: #111;
+            padding: 30px 15px;
+        }
+
+        .caixaPerfil {
+            width: 100%;
+            max-width: 380px;
+            margin: auto;
+            background: #1d1d1d;
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        .caixaPerfil input {
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .escolhaEmoji {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .escolhaEmoji button {
+            font-size: 25px;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #emojiPerfil {
+            font-size: 70px;
+        }
+
     </style>
 </head>
 
 <body>
 
-    <header>
-        <h1>Hugo Uggo Store! 🛒</h1>
 
-        <p>Confira a loja clicando neste botão:</p>
+<!-- =====================================
+     CABEÇALHO
+===================================== -->
 
-        <a class="botao" href="#loja">
-            🛍️ Conferir Loja
-        </a>
-    </header>
+<header>
 
-    <section id="loja">
+    <h1>Hugo Uggo Store! 🛒</h1>
 
-        <h2>🔥 Produtos</h2>
+    <p>
+        Confira a loja clicando neste botão:
+    </p>
 
-        <div class="produtos">
-
-            <div class="produto">
-    <h2>📦 Onde entregar?</h2>
-
-    <p>📍 Onde você mora?</p>
-    <input id="cidade" type="text" placeholder="Cidade ou região">
-
-    <p>🏠 Qual é a sua rua?</p>
-    <input id="rua" type="text" placeholder="Sua rua">
-
-    <br><br>
-
-    <button class="comprar" onclick="enviarPedido()">
-        Enviar pedido 📩
-    </button>
-</div>
-
-<script>
-function enviarPedido() {
-    const cidade = document.getElementById("cidade").value.trim();
-    const rua = document.getElementById("rua").value.trim();
-
-    if (!cidade || !rua) {
-        alert("Preencha a cidade/região e a rua!");
-        return;
-    }
-
-    const mensagem =
-        "🛍️ Novo pedido - Hugo Uggo Store!%0A%0A" +
-        "📍 Cidade/região: " + encodeURIComponent(cidade) + "%0A" +
-        "🏠 Rua: " + encodeURIComponent(rua);
-
-    // Troque SEUNUMERO pelo número autorizado da sua mãe,
-    // incluindo DDI +55 e DDD, sem espaços ou símbolos.
-    const numero = "55SEUNUMERO";
-
-    window.open(
-        "https://wa.me/" + numero + "?text=" + mensagem,
-        "_blank"
-    );
-}
-</script>
-
-            <div class="produto">
-    <h2>Escolha seus Hugos aqui! 🧸</h2>
-    <p>Escolha seu Hugo favorito e compre!</p>
-
-    <button class="comprar" onclick="mostrarHugos()">
-        Escolher Hugos 🛍️
-    </button>
-            </div>
-
-            <div class="produto">
-    <h2>Pacote aleatório Hugo Uggo! 🎁</h2>
-    <p>3 Hugos aleatórios, inclusive, um muito raro de vir!</p>
-    <div class="preco">R$ 4,50</div>
-
-    <a class="comprar" href="#">
-        Comprar
+    <a class="botao" href="#loja">
+        🛍️ Conferir Loja
     </a>
-            </div>
 
+</header>
+
+
+<!-- =====================================
+     LOJA
+===================================== -->
+
+<section id="loja">
+
+    <h2>🔥 Produtos</h2>
+
+
+    <!-- PERFIL VINCULADO -->
+
+    <div id="perfilLoja">
+
+        <div id="emojiLoja" style="font-size:50px;">
+            😍
         </div>
 
-    </section>
-
-    <footer>
-        © 2026 Hugo Uggo Store! 🛒
-    </footer>
-<!-- Página de escolha dos Hugos -->
-<section id="paginaHugos" style="display: none;">
-
-    <h1>Escolhe e compre! 🛍️</h1>
-    <p>Escolha um dos nossos Hugos:</p>
-
-    <div class="produtos">
-
-        <div class="produto">
-            <h2>Hugo 1 🔵</h2>
-            <p>Um Hugo especial para você!</p>
-            <div class="preco">R$ 7,00</div>
-            <a class="comprar" href="#">Comprar</a>
-        </div>
-
-        <div class="produto">
-            <h2>Hugo 2 🔵</h2>
-            <p>Um Hugo especial para você!</p>
-            <div class="preco">R$ 5,00</div>
-            <a class="comprar" href="#">Comprar</a>
-        </div>
-
-        <div class="produto">
-            <h2>Hugo 3 🔵</h2>
-            <p>Um Hugo especial para você!</p>
-            <div class="preco">R$ 2,00</div>
-            <a class="comprar" href="#">Comprar</a>
-        </div>
-
-        <div class="produto">
-            <h2>Hugo 4 🔵</h2>
-            <p>Um Hugo especial para você!</p>
-            <div class="preco">R$ 12,50</div>
-            <a class="comprar" href="#">Comprar</a>
-        </div>
-
-        <div class="produto">
-            <h2>Hugo 5 🔵</h2>
-            <p>Um Hugo especial para você!</p>
-            <div class="preco">R$ 4,00</div>
-            <a class="comprar" href="#">Comprar</a>
+        <div id="nomeLoja"
+             style="font-size:20px;font-weight:bold;">
+            Seu perfil
         </div>
 
     </div>
 
-    <button class="botao" onclick="voltarLoja()">
+
+    <div class="produtos">
+
+
+        <!-- PROMOÇÃO -->
+
+        <div class="produto">
+
+            <h2>
+                🎉 Hugo Uggo promoção!
+            </h2>
+
+            <p>
+                <strong>💰 R$ 5,00</strong>
+            </p>
+
+            <p>
+                📝 Hugo em promoção de 50%!
+            </p>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Hugo Uggo promoção',
+                    '5,00'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+
+        <!-- ESCOLHER HUGOS -->
+
+        <div class="produto">
+
+            <h2>
+                Escolha seus Hugos aqui! 🧸
+            </h2>
+
+            <p>
+                Escolha seu Hugo favorito e compre!
+            </p>
+
+            <button
+                class="comprar"
+                onclick="mostrarHugos()">
+
+                Escolher Hugos 🛍️
+
+            </button>
+
+        </div>
+
+
+        <!-- PACOTE -->
+
+        <div class="produto">
+
+            <h2>
+                Pacote aleatório Hugo Uggo! 🎁
+            </h2>
+
+            <p>
+                3 Hugos aleatórios, inclusive um muito raro de vir!
+            </p>
+
+            <div class="preco">
+                R$ 5,00
+            </div>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Pacote aleatório Hugo Uggo',
+                    '5,00'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     PÁGINA DOS 5 HUGOS
+===================================== -->
+
+<section id="paginaHugos">
+
+    <h1>
+        Escolha seu Hugo! 🛍️
+    </h1>
+
+    <p>
+        Escolha um dos nossos Hugos:
+    </p>
+
+
+    <div class="produtos">
+
+
+        <!-- HUGO 1 -->
+
+        <div class="produto">
+
+            <h2>
+                Hugo 1 🔵
+            </h2>
+
+            <p>
+                Um Hugo especial para você!
+            </p>
+
+            <div class="preco">
+                R$ 7,00
+            </div>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Hugo 1',
+                    '7,00'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+
+        <!-- HUGO 2 -->
+
+        <div class="produto">
+
+            <h2>
+                Hugo 2 🔵
+            </h2>
+
+            <p>
+                Um Hugo especial para você!
+            </p>
+
+            <div class="preco">
+                R$ 5,00
+            </div>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Hugo 2',
+                    '5,00'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+
+        <!-- HUGO 3 -->
+
+        <div class="produto">
+
+            <h2>
+                Hugo 3 🔵
+            </h2>
+
+            <p>
+                Um Hugo especial para você!
+            </p>
+
+            <div class="preco">
+                R$ 2,00
+            </div>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Hugo 3',
+                    '2,00'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+
+        <!-- HUGO 4 -->
+
+        <div class="produto">
+
+            <h2>
+                Hugo 4 🔵
+            </h2>
+
+            <p>
+                Um Hugo especial para você!
+            </p>
+
+            <div class="preco">
+                R$ 12,50
+            </div>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Hugo 4',
+                    '12,50'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+
+        <!-- HUGO 5 -->
+
+        <div class="produto">
+
+            <h2>
+                Hugo 5 🔵
+            </h2>
+
+            <p>
+                Um Hugo especial para você!
+            </p>
+
+            <div class="preco">
+                R$ 4,00
+            </div>
+
+            <button
+                class="comprar"
+                onclick="abrirCompra(
+                    'Hugo 5',
+                    '4,00'
+                )">
+
+                Comprar
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <button
+        class="botao"
+        onclick="voltarLoja()">
+
         ← Voltar para a loja
+
     </button>
 
 </section>
 
+
+<!-- =====================================
+     JANELA DE COMPRA
+===================================== -->
+
+<div id="janelaCompra">
+
+    <div class="caixaCompra">
+
+
+        <!-- CONFIRMAÇÃO -->
+
+        <div id="confirmacao">
+
+            <h2>
+                🛒 Confirmar compra
+            </h2>
+
+            <p>
+                Você quer comprar este produto?
+            </p>
+
+            <h3 id="produtoConfirmacao">
+                Hugo
+            </h3>
+
+            <p>
+                💰
+                <strong>
+                    R$
+                    <span id="precoConfirmacao">
+                        0,00
+                    </span>
+                </strong>
+            </p>
+
+
+            <button
+                class="botaoSim"
+                onclick="mostrarFormulario()">
+
+                ✅ Sim, eu quero!
+
+            </button>
+
+
+            <button
+                class="botaoNao"
+                onclick="fecharCompra()">
+
+                ❌ Não
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================
+             FORMULÁRIO
+        ================================= -->
+
+        <div id="formularioPedido">
+
+            <h2>
+                📦 Encomendar Hugo
+            </h2>
+
+            <p>
+                <strong>Produto:</strong>
+                <span id="produtoFormulario"></span>
+            </p>
+
+            <p>
+                <strong>Preço:</strong>
+                R$
+                <span id="precoFormulario"></span>
+            </p>
+
+
+            <input
+                id="rua"
+                type="text"
+                placeholder="Nome da rua"
+            >
+
+
+            <input
+                id="numeroCasa"
+                type="text"
+                placeholder="Número da casa"
+            >
+
+
+            <input
+                id="regiao"
+                type="text"
+                placeholder="Bairro / Região"
+            >
+
+
+            <input
+                id="cidade"
+                type="text"
+                placeholder="Cidade"
+            >
+
+
+            <select id="pagamento">
+
+                <option value="">
+                    Escolha o pagamento
+                </option>
+
+                <option value="Dinheiro vivo">
+                    💵 Dinheiro vivo
+                </option>
+
+                <option value="Pix">
+                    📱 Pix
+                </option>
+
+            </select>
+
+
+            <button
+                class="botaoSim"
+                onclick="encomendarHugo()">
+
+                📱 ENVIAR PEDIDO PELO WHATSAPP
+
+            </button>
+
+
+            <button
+                class="botaoNao"
+                onclick="voltarConfirmacao()">
+
+                ← VOLTAR
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     RODAPÉ
+===================================== -->
+
+<footer>
+
+    © 2026 Hugo Uggo Store! 🛒
+
+</footer>
+
+
+<!-- =====================================
+     PERFIL
+===================================== -->
+
+<section id="telaPerfil">
+
+    <div class="caixaPerfil">
+
+        <h1>
+            👤 Personalize seu perfil
+        </h1>
+
+        <p>
+            Escolha como seu perfil vai aparecer!
+        </p>
+
+
+        <input
+            id="nomePerfil"
+            type="text"
+            placeholder="Nome"
+        >
+
+
+        <input
+            id="sobrenomePerfil"
+            type="text"
+            placeholder="Sobrenome (opcional)"
+        >
+
+
+        <h2>
+            Escolha seu perfil
+        </h2>
+
+
+        <div class="escolhaEmoji">
+
+            <button
+                onclick="emojiAnteriorPerfil()">
+
+                ⬅️
+
+            </button>
+
+
+            <span id="emojiPerfil">
+                😍
+            </span>
+
+
+            <button
+                onclick="proximoEmojiPerfil()">
+
+                ➡️
+
+            </button>
+
+        </div>
+
+
+        <p id="erroPerfil"></p>
+
+
+        <button
+            class="botao"
+            onclick="confirmarPerfil()">
+
+            Confirmar perfil ✅
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
 <script>
 
-function mostrarHugos() {
-    document.getElementById("loja").style.display = "none";
-    document.getElementById("paginaHugos").style.display = "block";
-    window.scrollTo(0, 0);
+
+/* =====================================
+   COMPRA
+===================================== */
+
+let produtoSelecionado = "";
+let precoSelecionado = "";
+
+
+function abrirCompra(produto, preco) {
+
+    produtoSelecionado = produto;
+    precoSelecionado = preco;
+
+
+    document.getElementById(
+        "produtoConfirmacao"
+    ).textContent = produto;
+
+
+    document.getElementById(
+        "precoConfirmacao"
+    ).textContent = preco;
+
+
+    document.getElementById(
+        "produtoFormulario"
+    ).textContent = produto;
+
+
+    document.getElementById(
+        "precoFormulario"
+    ).textContent = preco;
+
+
+    document.getElementById(
+        "confirmacao"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "formularioPedido"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "janelaCompra"
+    ).style.display = "flex";
+
 }
+
+
+function mostrarFormulario() {
+
+    document.getElementById(
+        "confirmacao"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "formularioPedido"
+    ).style.display = "block";
+
+}
+
+
+function voltarConfirmacao() {
+
+    document.getElementById(
+        "formularioPedido"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "confirmacao"
+    ).style.display = "block";
+
+}
+
+
+function fecharCompra() {
+
+    document.getElementById(
+        "janelaCompra"
+    ).style.display = "none";
+
+}
+
+
+/* =====================================
+   WHATSAPP
+===================================== */
+
+function encomendarHugo() {
+
+    const rua =
+        document.getElementById(
+            "rua"
+        ).value.trim();
+
+
+    const numero =
+        document.getElementById(
+            "numeroCasa"
+        ).value.trim();
+
+
+    const regiao =
+        document.getElementById(
+            "regiao"
+        ).value.trim();
+
+
+    const cidade =
+        document.getElementById(
+            "cidade"
+        ).value.trim();
+
+
+    const pagamento =
+        document.getElementById(
+            "pagamento"
+        ).value;
+
+
+    if (
+        !rua ||
+        !numero ||
+        !regiao ||
+        !cidade ||
+        !pagamento
+    ) {
+
+        alert(
+            "⚠️ Preencha todos os campos antes de encomendar!"
+        );
+
+        return;
+
+    }
+
+
+    /*
+    =====================================
+    COLOQUE AQUI O NÚMERO DA SUA MÃE
+
+    Exemplo:
+    5511999999999
+
+    NÃO coloque:
+    +55
+    espaços
+    parênteses
+    traços
+    =====================================
+    */
+
+    const numeroWhatsApp =
+        "5521988301667";
+
+
+    if (numeroWhatsApp === "") {
+    alert("⚠️ O número do WhatsApp ainda não foi configurado.");
+    return;
+    }
+
+
+    const mensagem =
+
+        "📦 NOVA ENCOMENDA - HUGO UGGO\n\n" +
+
+        "🧸 Produto: " +
+        produtoSelecionado +
+        "\n" +
+
+        "💰 Preço: R$ " +
+        precoSelecionado +
+        "\n" +
+
+        "💳 Pagamento: " +
+        pagamento +
+        "\n\n" +
+
+        "🏠 ENDEREÇO\n" +
+
+        "Rua: " +
+        rua +
+        "\n" +
+
+        "Número: " +
+        numero +
+        "\n" +
+
+        "Bairro/Região: " +
+        regiao +
+        "\n" +
+
+        "Cidade: " +
+        cidade +
+        "\n\n" +
+
+        "💵 Pagamento na entrega.";
+
+
+    const url =
+
+        "https://wa.me/" +
+        numeroWhatsApp +
+        "?text=" +
+        encodeURIComponent(
+            mensagem
+        );
+
+
+    window.open(
+        url,
+        "_blank"
+    );
+
+}
+
+
+/* =====================================
+   PÁGINA DOS HUGOS
+===================================== */
+
+function mostrarHugos() {
+
+    document.getElementById(
+        "loja"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "paginaHugos"
+    ).style.display = "block";
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
 
 function voltarLoja() {
-    document.getElementById("paginaHugos").style.display = "none";
-    document.getElementById("loja").style.display = "block";
-    window.scrollTo(0, 0);
+
+    document.getElementById(
+        "paginaHugos"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "loja"
+    ).style.display = "block";
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
 }
 
-</script>
-</body>
-</html>
+
+/* =====================================
+   PERFIL
+===================================== */
+
+const emojisPerfil = [
+
+    "😍",
+    "😎",
+    "😄",
+    "😜",
+    "😠",
+    "🫨",
+    "🥴",
+    "🤑",
+    "💩",
+    "👻",
+    "👽",
+    "🥸",
+    "😺",
+    "🙉"
+
+];
+
+
+let emojiAtualPerfil = 0;
+
+
+function atualizarEmojiPerfil() {
+
+    document.getElementById(
+        "emojiPerfil"
+    ).textContent =
+        emojisPerfil[
+            emojiAtualPerfil
+        ];
+
+}
+
+
+function proximoEmojiPerfil() {
+
+    if (
+        emojiAtualPerfil <
+        emojisPerfil.length - 1
+    ) {
+
+        emojiAtualPerfil++;
+
+        atualizarEmojiPerfil();
+
+    }
+
+}
+
+
+function emojiAnteriorPerfil() {
+
+    if (
+        emojiAtualPerfil > 0
+    ) {
+
+        emojiAtualPerfil--;
+
+        atualizarEmojiPerfil();
+
+    }
+
+}
+
+
+function confirmarPerfil() {
+
+    const nome =
+        document.getElementById(
+            "nomePerfil"
+        ).value.trim();
+
+
+    const sobrenome =
+        document.getElementById(
+            "sobrenomePerfil"
+        ).value.trim();
+
+
+    const erro =
+        document.getElementById(
+            "erroPerfil"
+        );
+
+
+    if (
+        nome === ""
+    ) {
+
+        erro.style.color =
+            "#ff5555";
+
+        erro.textContent =
+            "⚠️ Digite seu nome.";
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "nomeUsuario",
+        nome
+    );
+
+
+    localStorage.setItem(
+        "sobrenomeUsuario",
+        sobrenome
+    );
+
+
+    localStorage.setItem(
+        "emojiUsuario",
+        emojisPerfil[
+            emojiAtualPerfil
+        ]
+    );
+
+
+    erro.style.color =
+        "#25D366";
+
+    erro.textContent =
+        "✅ Seu perfil foi salvo!";
+
+
+    atualizarPerfilLoja();
+
+}
+
+
+/* =====================================
+   ATUALIZAR PERFIL NA LOJA
+===================================== */
+
+function atualizarPerfilLoja() {
+
+    const emoji =
+        localStorage.getItem(
+            "emojiUsuario"
+        );
+
+
+    const nome =
+        localStorage.getItem(
+            "nomeUsuario"
+        );
+
+
+    const sobrenome =
+        localStorage.getItem(
+            "sobr
