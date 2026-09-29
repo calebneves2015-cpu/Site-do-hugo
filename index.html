@@ -1,1253 +1,5830 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cliker Simulator</title>
 
-    <title>Hugo Uggo Store!</title>
+<style>
+*{
+  box-sizing:border-box;
+}
 
-    <style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#111;
+  color:white;
+  text-align:center;
+  overflow-x:hidden;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+h1{
+  margin:18px 0 5px;
+  font-size:28px;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: white;
-            text-align: center;
-        }
+#pontos{
+  font-size:26px;
+  font-weight:bold;
+  margin-top:12px;
+}
 
-        header {
-            background: #222;
-            padding: 25px 10px;
-            border-bottom: 2px solid #444;
-        }
+#porClique{
+  font-size:15px;
+  color:#bbb;
+}
 
-        h1 {
-            margin: 0;
-            font-size: 32px;
-        }
+#botaoClique{
+  margin-top:25px;
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  border:none;
+  background:#247cff;
+  color:white;
+  font-size:25px;
+  font-weight:bold;
+  box-shadow:0 0 25px #247cff;
+}
 
-        header p {
-            color: #ccc;
-        }
+#botaoClique:active{
+  transform:scale(.94);
+}
 
-        .botao {
-            display: inline-block;
-            background: white;
-            color: #111;
-            padding: 14px 25px;
-            margin: 15px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
+#area{
+  width:95%;
+  max-width:500px;
+  margin:25px auto 80px;
+}
 
-        .produtos {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 30px 15px;
-        }
+.secao{
+  margin-top:25px;
+  font-size:22px;
+  font-weight:bold;
+}
 
-        .produto {
-            background: #222;
-            width: 250px;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px #000;
-        }
+.item{
+  background:#222;
+  border:1px solid #444;
+  border-radius:12px;
+  margin:10px 0;
+  padding:12px;
+  text-align:left;
+}
 
-        .produto h2 {
-            margin-top: 0;
-        }
+.item button{
+  width:100%;
+  margin-top:8px;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#333;
+  color:white;
+  font-weight:bold;
+}
 
-        .preco {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 15px;
-        }
+.item button:disabled{
+  opacity:.45;
+}
 
-        .comprar {
-            background: white;
-            color: #111;
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-        }
+.preco{
+  color:#ffd43b;
+}
 
-        footer {
-            margin-top: 30px;
-            padding: 20px;
-            background: #222;
-            color: #aaa;
-        }
+.pet{
+  border:1px solid #555;
+}
 
-        /* PERFIL NA LOJA */
+#petsAtivos{
+  position:fixed;
+  top:10px;
+  right:8px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  font-size:25px;
+  z-index:5;
+}
 
-        #perfilLoja {
-            background: #1d1d1d;
-            padding: 15px;
-            border-radius: 15px;
-            margin: 15px;
-        }
+#reiniciar{
+  position:fixed;
+  bottom:7px;
+  left:7px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid #555;
+  background:#222;
+  color:#aaa;
+  font-size:15px;
+  padding:0;
+  z-index:20;
+}
 
-        /* PÁGINA DOS HUGOS */
+#mensagem{
+  min-height:20px;
+  margin-top:10px;
+  color:#aaa;
+  font-size:14px;
+}
 
-        #paginaHugos {
-            display: none;
-        }
+/* =========================
+   BOTÃO DA LOJA
+========================= */
 
-        /* JANELA DE COMPRA */
+#botaoLoja{
+  position:fixed;
+  right:12px;
+  bottom:12px;
+  width:58px;
+  height:58px;
+  border-radius:15px;
+  border:2px solid #555;
+  background:#222;
+  color:white;
+  font-size:29px;
+  z-index:50;
+  box-shadow:0 4px 15px #000;
+}
 
-        #janelaCompra {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 15px;
-        }
+/* =========================
+   JANELA DA LOJA
+========================= */
 
-        .caixaCompra {
-            background: white;
-            color: #111;
-            width: 100%;
-            max-width: 400px;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-        }
+#loja{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.82);
+  z-index:40;
+  padding:25px 12px;
+  overflow-y:auto;
+}
 
-        .caixaCompra input,
-        .caixaCompra select {
-            width: 100%;
-            padding: 12px;
-            margin: 7px 0;
-            border: 1px solid #aaa;
-            border-radius: 8px;
-            font-size: 15px;
-        }
+#loja.caixaAberta{
+  display:block;
+}
 
-        .caixaCompra button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+#lojaCaixa{
+  width:100%;
+  max-width:430px;
+  margin:20px auto;
+  background:#181818;
+  border:1px solid #444;
+  border-radius:18px;
+  padding:15px;
+  box-shadow:0 0 30px #000;
+}
 
-        .botaoSim {
-            background: #25D366;
-            color: white;
-        }
+#lojaTitulo{
+  font-size:25px;
+  font-weight:bold;
+  margin-bottom:12px;
+}
 
-        .botaoNao {
-            background: #ddd;
-            color: #111;
-        }
+#fecharLoja{
+  position:absolute;
+  right:18px;
+  top:15px;
+  border:none;
+  background:#333;
+  color:white;
+  border-radius:50%;
+  width:35px;
+  height:35px;
+  font-size:18px;
+}
 
-        #formularioPedido {
-            display: none;
-        }
+/* GEMAS DA LOJA */
 
-        /* PERFIL */
+#gemasLoja{
+  color:#67d9ff;
+  font-weight:bold;
+  margin-bottom:12px;
+}
 
-        #telaPerfil {
-            background: #111;
-            padding: 30px 15px;
-        }
+/* ABAS */
 
-        .caixaPerfil {
-            width: 100%;
-            max-width: 380px;
-            margin: auto;
-            background: #1d1d1d;
-            padding: 30px;
-            border-radius: 20px;
-        }
+#abasLoja{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  margin-bottom:12px;
+}
 
-        .caixaPerfil input {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 10px;
-        }
+.abaLoja{
+  border:none;
+  border-radius:8px;
+  padding:9px 3px;
+  background:#292929;
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+}
 
-        .escolhaEmoji {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin: 25px 0;
-        }
+.abaLoja.ativa{
+  background:#247cff;
+}
 
-        .escolhaEmoji button {
-            font-size: 25px;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
+/* DESTAQUE */
 
-        #emojiPerfil {
-            font-size: 70px;
-        }
+.destaque{
+  border:2px solid #ffd43b;
+  background:#292000;
+}
 
-    </style>
+/* RADIOATIVO */
+
+.radioativo{
+  border:2px solid #75ff75;
+  background:#102010;
+}
+
+.limitado{
+  color:#75ff75;
+  font-weight:bold;
+}
+
+/* =========================
+   CONTEÚDO DA LOJA
+========================= */
+
+.abaConteudo{
+  display:none;
+}
+
+.abaConteudo.ativo{
+  display:block;
+}
+
+.produtoLoja{
+  background:#222;
+  border:1px solid #444;
+  border-radius:12px;
+  padding:14px;
+  margin:10px 0;
+  text-align:left;
+}
+
+.produtoEmoji{
+  font-size:35px;
+  text-align:center;
+  margin-bottom:5px;
+}
+
+.produtoNome{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.produtoDescricao{
+  color:#aaa;
+  font-size:13px;
+  margin:5px 0;
+}
+
+.produtoPreco{
+  color:#ffd43b;
+  font-weight:bold;
+}
+
+.produtoLoja button{
+  width:100%;
+  margin-top:9px;
+  padding:11px;
+  border:none;
+  border-radius:8px;
+  background:#247cff;
+  color:white;
+  font-weight:bold;
+}
+
+.produtoLoja button:disabled{
+  opacity:.4;
+}
+
+/* =========================
+   PETS DA LOJA
+========================= */
+
+.petComum{
+  border-left:4px solid #aaa;
+}
+
+.petMorcego{
+  border-left:4px solid #777;
+}
+
+.petUnicornio{
+  border-left:4px solid #ff8cff;
+}
+
+.chance{
+  color:#bbb;
+  font-size:13px;
+}
+</style>
 </head>
 
 <body>
 
+<h1>🎮 Cliker Simulator</h1>
 
-<!-- =====================================
-     CABEÇALHO
-===================================== -->
+<div id="pontos">0 PT</div>
+<div id="porClique">+1 PT por clique</div>
 
-<header>
+<button id="botaoClique">CLIQUE!</button>
 
-    <h1>Hugo Uggo Store! 🛒</h1>
+<div id="mensagem"></div>
 
-    <p>
-        Confira a loja clicando neste botão:
-    </p>
+<div id="area">
 
-    <a class="botao" href="#loja">
-        🛍️ Conferir Loja
-    </a>
+  <div class="secao">⬆️ UPGRADES</div>
+  <div id="upgrades"></div>
 
-</header>
+  <div class="secao">🐾 PETS</div>
+  <div id="pets"></div>
+
+</div>
+
+<div id="petsAtivos"></div>
+
+<button id="reiniciar" title="Reiniciar">↩</button>
 
 
-<!-- =====================================
+<!-- =========================
+     BOTÃO DA LOJA
+========================= -->
+
+<button id="botaoLoja">🛒</button>
+
+
+<!-- =========================
      LOJA
-===================================== -->
+========================= -->
 
-<section id="loja">
+<div id="loja">
 
-    <h2>🔥 Produtos</h2>
+  <button id="fecharLoja">✕</button>
 
+  <div id="lojaCaixa">
 
-    <!-- PERFIL VINCULADO -->
+    <div id="lojaTitulo">🛒 LOJA</div>
 
-    <div id="perfilLoja">
+    <div id="gemasLoja">
+      💎 Gemas: <span id="quantidadeGemas">0</span>
+    </div>
 
-        <div id="emojiLoja" style="font-size:50px;">
-            😍
-        </div>
+    <div id="abasLoja">
 
-        <div id="nomeLoja"
-             style="font-size:20px;font-weight:bold;">
-            Seu perfil
-        </div>
+      <button class="abaLoja ativa" data-aba="destaque">
+        🔥 DESTAQUE
+      </button>
+
+      <button class="abaLoja" data-aba="petsLoja">
+        🐈‍⬛ PETS
+      </button>
+
+      <button class="abaLoja" data-aba="gemas">
+        💎 GEMAS
+      </button>
+
+      <button class="abaLoja" data-aba="inicio">
+        🏠 INÍCIO
+      </button>
 
     </div>
 
 
-    <div class="produtos">
+    <!-- =========================
+         DESTAQUE
+    ========================= -->
 
+    <div id="destaque" class="abaConteudo ativo">
 
-        <!-- PROMOÇÃO -->
+      <div class="produtoLoja destaque radioativo">
 
-        <div class="produto">
+        <div class="produtoEmoji">☢️</div>
 
-            <h2>
-                🎉 Hugo Uggo promoção!
-            </h2>
-
-            <p>
-                <strong>💰 R$ 5,00</strong>
-            </p>
-
-            <p>
-                📝 Hugo em promoção de 50%!
-            </p>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Hugo Uggo promoção',
-                    '5,00'
-                )">
-
-                Comprar
-
-            </button>
-
+        <div class="produtoNome">
+          PET RADIOATIVO
         </div>
 
-
-        <!-- ESCOLHER HUGOS -->
-
-        <div class="produto">
-
-            <h2>
-                Escolha seus Hugos aqui! 🧸
-            </h2>
-
-            <p>
-                Escolha seu Hugo favorito e compre!
-            </p>
-
-            <button
-                class="comprar"
-                onclick="mostrarHugos()">
-
-                Escolher Hugos 🛍️
-
-            </button>
-
+        <div class="limitado">
+          ⏳ ITEM LIMITADO!
         </div>
 
-
-        <!-- PACOTE -->
-
-        <div class="produto">
-
-            <h2>
-                Pacote aleatório Hugo Uggo! 🎁
-            </h2>
-
-            <p>
-                3 Hugos aleatórios, inclusive um muito raro de vir!
-            </p>
-
-            <div class="preco">
-                R$ 5,00
-            </div>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Pacote aleatório Hugo Uggo',
-                    '5,00'
-                )">
-
-                Comprar
-
-            </button>
-
+        <div class="produtoDescricao">
+          Um pet extremamente raro.
+          Multiplica seus cliques por 100×.
         </div>
 
-    </div>
-
-</section>
-
-
-<!-- =====================================
-     PÁGINA DOS 5 HUGOS
-===================================== -->
-
-<section id="paginaHugos">
-
-    <h1>
-        Escolha seu Hugo! 🛍️
-    </h1>
-
-    <p>
-        Escolha um dos nossos Hugos:
-    </p>
-
-
-    <div class="produtos">
-
-
-        <!-- HUGO 1 -->
-
-        <div class="produto">
-
-            <h2>
-                Hugo 1 🔵
-            </h2>
-
-            <p>
-                Hugo Ninja supremo!
-            </p>
-
-            <div class="preco">
-                R$ 7,00
-            </div>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Hugo 1',
-                    '7,00'
-                )">
-
-                Comprar
-
-            </button>
-
+        <div class="produtoPreco">
+          💎 5 GEMAS
         </div>
 
+        <button id="comprarRadioativo">
+          COMPRAR ☢️
+        </button>
 
-        <!-- HUGO 2 -->
-
-        <div class="produto">
-
-            <h2>
-                Hugo 2 🔵
-            </h2>
-
-            <p>
-                Um Hugo alienígena!
-            </p>
-
-            <div class="preco">
-                R$ 5,00
-            </div>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Hugo 2',
-                    '5,00'
-                )">
-
-                Comprar
-
-            </button>
-
-        </div>
-
-
-        <!-- HUGO 3 -->
-
-        <div class="produto">
-
-            <h2>
-                Hugo 3 🔵
-            </h2>
-
-            <p>
-                Hugo Uggo clássico!
-            </p>
-
-            <div class="preco">
-                R$ 2,00
-            </div>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Hugo 3',
-                    '2,00'
-                )">
-
-                Comprar
-
-            </button>
-
-        </div>
-
-
-        <!-- HUGO 4 -->
-
-        <div class="produto">
-
-            <h2>
-                Hugo 4 🔵
-            </h2>
-
-            <p>
-                Hugo Uggo Mega supremo!
-            </p>
-
-            <div class="preco">
-                R$ 12,50
-            </div>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Hugo 4',
-                    '12,50'
-                )">
-
-                Comprar
-
-            </button>
-
-        </div>
-
-
-        <!-- HUGO 5 -->
-
-        <div class="produto">
-
-            <h2>
-                Hugo 5 🔵
-            </h2>
-
-            <p>
-                Hugo Uggo Robô!
-            </p>
-
-            <div class="preco">
-                R$ 4,00
-            </div>
-
-            <button
-                class="comprar"
-                onclick="abrirCompra(
-                    'Hugo 5',
-                    '4,00'
-                )">
-
-                Comprar
-
-            </button>
-
-        </div>
-
+      </div>
 
     </div>
 
 
-    <button
-        class="botao"
-        onclick="voltarLoja()">
+    <!-- =========================
+         PETS
+    ========================= -->
 
-        ← Voltar para a loja
+    <div id="petsLoja" class="abaConteudo">
 
-    </button>
+      <div class="produtoLoja petComum">
 
-</section>
+        <div class="produtoEmoji">🙂</div>
 
-
-<!-- =====================================
-     JANELA DE COMPRA
-===================================== -->
-
-<div id="janelaCompra">
-
-    <div class="caixaCompra">
-
-
-        <!-- CONFIRMAÇÃO -->
-
-        <div id="confirmacao">
-
-            <h2>
-                🛒 Confirmar compra
-            </h2>
-
-            <p>
-                Você quer comprar este produto?
-            </p>
-
-            <h3 id="produtoConfirmacao">
-                Hugo
-            </h3>
-
-            <p>
-                💰
-                <strong>
-                    R$
-                    <span id="precoConfirmacao">
-                        0,00
-                    </span>
-                </strong>
-            </p>
-
-
-            <button
-                class="botaoSim"
-                onclick="mostrarFormulario()">
-
-                ✅ Sim, eu quero!
-
-            </button>
-
-
-            <button
-                class="botaoNao"
-                onclick="fecharCompra()">
-
-                ❌ Não
-
-            </button>
-
+        <div class="produtoNome">
+          Pet Clássico
         </div>
 
-
-        <!-- =================================
-             FORMULÁRIO
-        ================================= -->
-
-        <div id="formularioPedido">
-
-            <h2>
-                📦 Encomendar Hugo
-            </h2>
-
-            <p>
-                <strong>Produto:</strong>
-                <span id="produtoFormulario"></span>
-            </p>
-
-            <p>
-                <strong>Preço:</strong>
-                R$
-                <span id="precoFormulario"></span>
-            </p>
-
-
-            <input
-                id="rua"
-                type="text"
-                placeholder="Nome da rua"
-            >
-
-
-            <input
-                id="numeroCasa"
-                type="text"
-                placeholder="Número da casa"
-            >
-
-
-            <input
-                id="regiao"
-                type="text"
-                placeholder="Bairro / Região"
-            >
-
-
-            <input
-                id="cidade"
-                type="text"
-                placeholder="Cidade"
-            >
-
-
-            <select id="pagamento">
-
-                <option value="">
-                    Escolha o pagamento
-                </option>
-
-                <option value="Dinheiro vivo">
-                    💵 Dinheiro vivo
-                </option>
-
-                <option value="Pix">
-                    📱 Pix
-                </option>
-
-            </select>
-
-
-            <button
-                class="botaoSim"
-                onclick="encomendarHugo()">
-
-                📱 ENVIAR PEDIDO PELO WHATSAPP
-
-            </button>
-
-
-            <button
-                class="botaoNao"
-                onclick="voltarConfirmacao()">
-
-                ← VOLTAR
-
-            </button>
-
+        <div class="produtoDescricao">
+          Multiplica os cliques por 2×.
         </div>
+
+        <div class="chance">
+          🎲 Chance: 70%
+        </div>
+
+        <div class="produtoPreco">
+          💎 1 GEMA
+        </div>
+
+        <button onclick="comprarPetAleatorio()">
+          COMPRAR PET ALEATÓRIO
+        </button>
+
+      </div>
+
+
+      <div class="produtoLoja petMorcego">
+
+        <div class="produtoEmoji">🦇</div>
+
+        <div class="produtoNome">
+          Morcego
+        </div>
+
+        <div class="produtoDescricao">
+          Multiplica os cliques por 8×.
+        </div>
+
+        <div class="chance">
+          🎲 Chance: 50%
+        </div>
+
+        <div class="produtoPreco">
+          💎 1 GEMA
+        </div>
+
+      </div>
+
+
+      <div class="produtoLoja petUnicornio">
+
+        <div class="produtoEmoji">🦄</div>
+
+        <div class="produtoNome">
+          Unicórnio
+        </div>
+
+        <div class="produtoDescricao">
+          O pet mais raro!
+          Multiplica os cliques por 50×.
+        </div>
+
+        <div class="chance">
+          🎲 Chance: 10%
+        </div>
+
+        <div class="produtoPreco">
+          💎 1 GEMA
+        </div>
+
+      </div>
+
+      <div class="produtoLoja">
+        <b>🎲 Como funciona?</b>
+        <br><br>
+        Compre um pet aleatório por 1 💎.
+        Você pode receber 🙂, 🦇 ou 🦄!
+      </div>
 
     </div>
+
+
+    <!-- =========================
+         GEMAS
+    ========================= -->
+
+    <div id="gemas" class="abaConteudo">
+
+      <div class="produtoLoja">
+
+        <div class="produtoEmoji">💎</div>
+
+        <div class="produtoNome">
+          1 Gema
+        </div>
+
+        <div class="produtoDescricao">
+          Use para comprar pets e itens especiais.
+        </div>
+
+        <div class="produtoPreco">
+          💰 1.000 PT
+        </div>
+
+        <button onclick="comprarGemas(1,1000n)">
+          COMPRAR 1 💎
+        </button>
+
+      </div>
+
+
+      <div class="produtoLoja">
+
+        <div class="produtoEmoji">💎💎💎💎💎</div>
+
+        <div class="produtoNome">
+          5 Gemas
+        </div>
+
+        <div class="produtoDescricao">
+          Um pacote com 5 gemas.
+        </div>
+
+        <div class="produtoPreco">
+          💰 5.000 PT
+        </div>
+
+        <button onclick="comprarGemas(5,5000n)">
+          COMPRAR 5 💎
+        </button>
+
+      </div>
+
+
+      <div class="produtoLoja">
+
+        <div class="produtoEmoji">💎💎💎💎💎💎💎💎💎💎</div>
+
+        <div class="produtoNome">
+          10 Gemas
+        </div>
+
+        <div class="produtoDescricao">
+          Um pacote com 10 gemas.
+        </div>
+
+        <div class="produtoPreco">
+          💰 10.000 PT
+        </div>
+
+        <button onclick="comprarGemas(10,10000n)">
+          COMPRAR 10 💎
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         INÍCIO
+    ========================= -->
+
+    <div id="inicio" class="abaConteudo">
+
+      <div class="produtoLoja">
+
+        <div class="produtoEmoji">🏠</div>
+
+        <div class="produtoNome">
+          Bem-vindo à Loja!
+        </div>
+
+        <div class="produtoDescricao">
+          Escolha uma categoria acima para
+          comprar gemas, pets e itens especiais.
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
 
 
-<!-- =====================================
-     RODAPÉ
-===================================== -->
+<script>
 
-<footer>
+/* =========================
+   SISTEMA PRINCIPAL
+========================= */
 
-    © 2026 Hugo Uggo Store! 🛒
+let pontos = 0n;
 
-</footer>
+let pontosPorClique = 1n;
+let automatico = 0n;
 
+let multiplicador = 1n;
+let multiplicadorPets = 1n;
 
-<!-- =====================================
-     PERFIL
-===================================== -->
+let gemas = 0;
 
-<section id="telaPerfil">
-
-    <div class="caixaPerfil">
-
-        <h1>
-            👤 Personalize seu perfil
-        </h1>
-
-        <p>
-            Escolha como seu perfil vai aparecer!
-        </p>
+let comprados = [];
+let petsComprados = [];
 
 
-        <input
-            id="nomePerfil"
-            type="text"
-            placeholder="Nome"
-        >
+/* =========================
+   PETS ESPECIAIS DA LOJA
+========================= */
+
+let petsLoja = [];
 
 
-        <input
-            id="sobrenomePerfil"
-            type="text"
-            placeholder="Sobrenome (opcional)"
-        >
+/* =========================
+   FORMATADOR
+========================= */
+
+function formatarNumero(numero){
+
+  numero = BigInt(numero);
+
+  if(numero < 1000n){
+    return numero.toString();
+  }
+
+  const unidades = [
+    ["Mil", 10n**3n],
+    ["M", 10n**6n],
+    ["B", 10n**9n],
+    ["T", 10n**12n],
+    ["Qa", 10n**15n],
+    ["Qi", 10n**18n],
+    ["Sx", 10n**21n],
+    ["Sp", 10n**24n],
+    ["Oc", 10n**27n],
+    ["No", 10n**30n],
+    ["Dc", 10n**33n],
+    ["Ud", 10n**36n],
+    ["Dd", 10n**39n],
+    ["Td", 10n**42n],
+    ["Qad",10n**45n],
+    ["Qid",10n**48n],
+    ["Sxd",10n**51n],
+    ["Spd",10n**54n],
+    ["Ocd",10n**57n],
+    ["Nod",10n**60n],
+    ["Vg", 10n**63n]
+  ];
+
+  for(let i=unidades.length-1;i>=0;i--){
+
+    if(numero >= unidades[i][1]){
+
+      let valor =
+        Number(numero) / Number(unidades[i][1]);
+
+      if(valor >= 1000){
+        valor = Math.floor(valor);
+      }else{
+        valor = valor.toFixed(1);
+      }
+
+      return valor + " " + unidades[i][0];
+    }
+  }
+
+  return numero.toString();
+}
 
 
-        <h2>
-            Escolha seu perfil
-        </h2>
+/* =========================
+   UPGRADES
+========================= */
+
+const upgrades = [
+
+  {nome:"Dedo melhor",preco:50n,tipo:"clique",valor:1n},
+  {nome:"Clique duplo",preco:200n,tipo:"clique",valor:1n},
+  {nome:"Primeiro automático",preco:800n,tipo:"auto",valor:1n},
+  {nome:"Clique reforçado",preco:3000n,tipo:"clique",valor:2n},
+  {nome:"Mini máquina",preco:10000n,tipo:"auto",valor:2n},
+  {nome:"Clique potente",preco:30000n,tipo:"clique",valor:3n},
+  {nome:"Máquina melhorada",preco:100000n,tipo:"auto",valor:5n},
+  {nome:"Super clique",preco:300000n,tipo:"clique",valor:5n},
+  {nome:"Gerador",preco:1000000n,tipo:"auto",valor:15n},
+  {nome:"Clique avançado",preco:3000000n,tipo:"clique",valor:8n},
+  {nome:"Gerador II",preco:10000000n,tipo:"auto",valor:40n},
+  {nome:"Mega clique",preco:30000000n,tipo:"clique",valor:12n},
+  {nome:"Gerador III",preco:100000000n,tipo:"auto",valor:100n},
+  {nome:"Clique extremo",preco:500000000n,tipo:"clique",valor:20n},
+  {nome:"Central automática",preco:2000000000n,tipo:"auto",valor:300n},
+  {nome:"Clique absurdo",preco:10000000000n,tipo:"clique",valor:35n},
+  {nome:"Central II",preco:50000000000n,tipo:"auto",valor:1000n},
+  {nome:"Clique lendário",preco:300000000000n,tipo:"clique",valor:60n},
+  {nome:"Central III",preco:2000000000000n,tipo:"auto",valor:5000n},
+  {nome:"Último clique",preco:20000000000000n,tipo:"clique",valor:100n}
+
+];
 
 
-        <div class="escolhaEmoji">
+/* =========================
+   PETS NORMAIS
+========================= */
 
-            <button
-                onclick="emojiAnteriorPerfil()">
+const pets = [
 
-                ⬅️
+  {nome:"🐶 Cachorro",preco:100000000000000n,multiplicador:10n},
+  {nome:"🐱 Gato",preco:10000000000000000n,multiplicador:100n},
+  {nome:"🐺 Lobo",preco:1000000000000000000n,multiplicador:1000n},
+  {nome:"🦊 Raposa",preco:100000000000000000000n,multiplicador:10000n},
+  {nome:"🐉 Dragão",preco:10000000000000000000000n,multiplicador:100000n},
+  {nome:"👑 Rei",preco:1000000000000000000000000n,multiplicador:10000000n},
+  {nome:"🌌 Guardião",preco:100000000000000000000000000n,multiplicador:1000000000n},
+  {nome:"✨ Celestial",preco:10000000000000000000000000000n,multiplicador:1000000000000n},
+  {nome:"🌠 Divino",preco:1000000000000000000000000000000n,multiplicador:10000000000000000n},
+  {nome:"😇 Anjo",preco:10n**63n,multiplicador:1000000000000000000n}
 
-            </button>
-
-
-            <span id="emojiPerfil">
-                😍
-            </span>
-
-
-            <button
-                onclick="proximoEmojiPerfil()">
-
-                ➡️
-
-            </button>
-
-        </div>
+];
 
 
-        <p id="erroPerfil"></p>
+/* =========================
+   PETS DA LOJA
+========================= */
+
+const petsAleatorios = [
+
+  {
+    emoji:"🙂",
+    nome:"Pet Clássico",
+    multiplicador:2n,
+    peso:70
+  },
+
+  {
+    emoji:"🦇",
+    nome:"Morcego",
+    multiplicador:8n,
+    peso:50
+  },
+
+  {
+    emoji:"🦄",
+    nome:"Unicórnio",
+    multiplicador:50n,
+    peso:10
+  }
+
+];
 
 
-        <button
-            class="botao"
-            onclick="confirmarPerfil()">
+/* =========================
+   SOM
+========================= */
 
-            Confirmar perfil ✅
+let audioContext = null;
 
-        </button>
+function tocarSomClique(){
+
+  if(audioContext === null){
+    audioContext =
+      new (window.AudioContext ||
+      window.webkitAudioContext)();
+  }
+
+  if(audioContext.state === "suspended"){
+    audioContext.resume();
+  }
+
+  const agora = audioContext.currentTime;
+
+  const som = audioContext.createOscillator();
+  const volume = audioContext.createGain();
+
+  som.type = "square";
+
+  som.frequency.setValueAtTime(180,agora);
+  som.frequency.exponentialRampToValueAtTime(
+    80,
+    agora + 0.035
+  );
+
+  volume.gain.setValueAtTime(.12,agora);
+  volume.gain.exponentialRampToValueAtTime(
+    .001,
+    agora + .045
+  );
+
+  som.connect(volume);
+  volume.connect(audioContext.destination);
+
+  som.start(agora);
+  som.stop(agora+.045);
+}
+
+
+/* =========================
+   CLIQUE
+========================= */
+
+document.getElementById("botaoClique").onclick=function(){
+
+  tocarSomClique();
+
+  let ganho =
+  pontosPorClique *
+  multiplicador *
+  multiplicadorPets *
+  BigInt(obterMultiplicadorEventos());
+
+  pontos += ganho;
+
+  atualizar();
+};
+
+
+/* =========================
+   UPGRADES
+========================= */
+
+function criarUpgrades(){
+
+  const div=document.getElementById("upgrades");
+
+  div.innerHTML="";
+
+  upgrades.forEach((u,index)=>{
+
+    const item=document.createElement("div");
+
+    item.className="item";
+
+    const comprado=comprados.includes(index);
+
+    let efeito="";
+
+    if(u.tipo==="clique"){
+      efeito="+"+formatarNumero(u.valor)+" por clique";
+    }else{
+      efeito="+"+formatarNumero(u.valor)+" PT/s";
+    }
+
+    item.innerHTML=`
+      <b>${index+1}. ${u.nome}</b><br>
+      <small>${efeito}</small><br>
+      <span class="preco">
+        💰 ${formatarNumero(u.preco)} PT
+      </span>
+      <button ${comprado?"disabled":""}>
+        ${comprado?"COMPRADO ✅":"COMPRAR"}
+      </button>
+    `;
+
+    const botao=item.querySelector("button");
+
+    botao.onclick=()=>{
+
+      if(pontos<u.preco)return;
+
+      pontos-=u.preco;
+
+      if(u.tipo==="clique"){
+        pontosPorClique+=u.valor;
+      }
+
+      if(u.tipo==="auto"){
+        automatico+=u.valor;
+      }
+
+      comprados.push(index);
+
+      atualizar();
+
+    };
+
+    div.appendChild(item);
+
+  });
+}
+
+
+/* =========================
+   PETS NORMAIS
+========================= */
+
+function criarPets(){
+
+  const div=document.getElementById("pets");
+
+  div.innerHTML="";
+
+  pets.forEach((p,index)=>{
+
+    const item=document.createElement("div");
+
+    item.className="item pet";
+
+    const comprado=petsComprados.includes(index);
+
+    item.innerHTML=`
+      <b>${p.nome}</b><br>
+      <small>
+        Multiplica os ganhos por
+        ${formatarNumero(p.multiplicador)}
+      </small><br>
+      <span class="preco">
+        💰 ${formatarNumero(p.preco)} PT
+      </span>
+
+      <button ${comprado?"disabled":""}>
+        ${comprado?"ADQUIRIDO 😎":"COMPRAR PET"}
+      </button>
+    `;
+
+    const botao=item.querySelector("button");
+
+    botao.onclick=()=>{
+
+      if(pontos<p.preco)return;
+
+      pontos-=p.preco;
+
+      multiplicadorPets*=p.multiplicador;
+
+      petsComprados.push(index);
+
+      atualizar();
+
+    };
+
+    div.appendChild(item);
+
+  });
+}
+
+
+/* =========================
+   MOSTRAR PETS
+========================= */
+
+function mostrarPets(){
+
+  const div=document.getElementById("petsAtivos");
+
+  div.innerHTML="";
+
+  petsComprados.forEach(index=>{
+
+    div.innerHTML+=pets[index].nome.split(" ")[0];
+
+  });
+
+  petsLoja.forEach(pet=>{
+    div.innerHTML+=pet.emoji;
+  });
+}
+
+
+/* =========================
+   COMPRAR GEMAS
+========================= */
+
+function comprarGemas(quantidade,preco){
+
+  if(pontos<preco){
+
+    mensagem("❌ Você não tem pontos suficientes!");
+
+    return;
+  }
+
+  pontos-=preco;
+
+  gemas+=quantidade;
+
+  mensagem(
+    "💎 Você recebeu "+quantidade+" gema"+
+    (quantidade>1?"s!":"!")
+  );
+
+  atualizarLoja();
+  atualizar();
+
+}
+
+
+/* =========================
+   PET ALEATÓRIO
+========================= */
+
+function comprarPetAleatorio(){
+
+  if(gemas<1){
+
+    mensagem("❌ Você precisa de 1 💎!");
+
+    return;
+  }
+
+  gemas--;
+
+  let totalPeso=0;
+
+  petsAleatorios.forEach(p=>{
+    totalPeso+=p.peso;
+  });
+
+  let sorteio=Math.random()*totalPeso;
+
+  let escolhido=null;
+
+  for(const p of petsAleatorios){
+
+    sorteio-=p.peso;
+
+    if(sorteio<=0){
+
+      escolhido=p;
+      break;
+
+    }
+
+  }
+
+  petsLoja.push(escolhido);
+
+  multiplicadorPets*=escolhido.multiplicador;
+
+  mensagem(
+    "🎉 Você conseguiu "+escolhido.emoji+
+    " "+escolhido.nome+
+    "! ×"+escolhido.multiplicador
+  );
+
+  atualizarLoja();
+  atualizar();
+
+}
+
+
+/* =========================
+   PET RADIOATIVO
+========================= */
+
+document.getElementById("comprarRadioativo").onclick=function(){
+
+  if(gemas<5){
+
+    mensagem("❌ Você precisa de 5 💎!");
+
+    return;
+  }
+
+  if(petsLoja.some(p=>p.radioativo)){
+
+    mensagem("☢️ Você já possui o Pet Radioativo!");
+
+    return;
+  }
+
+  gemas-=5;
+
+  const radioativo={
+    emoji:"☢️",
+    nome:"Pet Radioativo",
+    multiplicador:100n,
+    radioativo:true
+  };
+
+  petsLoja.push(radioativo);
+
+  multiplicadorPets*=100n;
+
+  mensagem(
+    "☢️ PET RADIOATIVO ADQUIRIDO! ×100"
+  );
+
+  document.getElementById("comprarRadioativo").disabled=true;
+
+  atualizarLoja();
+  atualizar();
+
+};
+
+
+/* =========================
+   LOJA
+========================= */
+
+const botaoLoja=document.getElementById("botaoLoja");
+const loja=document.getElementById("loja");
+const fecharLoja=document.getElementById("fecharLoja");
+
+botaoLoja.onclick=()=>{
+
+  loja.classList.add("caixaAberta");
+
+  atualizarLoja();
+
+};
+
+fecharLoja.onclick=()=>{
+
+  loja.classList.remove("caixaAberta");
+
+};
+
+
+/* =========================
+   ABAS
+========================= */
+
+document.querySelectorAll(".abaLoja").forEach(botao=>{
+
+  botao.onclick=()=>{
+
+    document.querySelectorAll(".abaLoja")
+      .forEach(b=>b.classList.remove("ativa"));
+
+    document.querySelectorAll(".abaConteudo")
+      .forEach(c=>c.classList.remove("ativo"));
+
+    botao.classList.add("ativa");
+
+    document
+      .getElementById(botao.dataset.aba)
+      .classList.add("ativo");
+
+  };
+
+});
+
+/* =========================
+   ATUALIZAR LOJA
+========================= */
+
+function atualizarLoja(){
+
+  document.getElementById("quantidadeGemas")
+    .textContent = gemas;
+
+  const radioativoComprado =
+    petsLoja.some(p => p.radioativo);
+
+  const botao =
+    document.getElementById("comprarRadioativo");
+
+  if(radioativoComprado){
+
+    botao.disabled = true;
+    botao.textContent = "ADQUIRIDO ☢️";
+
+  }else{
+
+    botao.disabled = false;
+    botao.textContent = "COMPRAR ☢️";
+
+  }
+
+}
+
+
+/* =========================
+   MENSAGEM
+========================= */
+
+function mensagem(texto){
+
+  document.getElementById("mensagem")
+    .textContent = texto;
+
+  setTimeout(()=>{
+
+    document.getElementById("mensagem")
+      .textContent = "";
+
+  },2500);
+
+}
+
+
+/* =========================
+   ATUALIZAR
+========================= */
+
+let sincronizandoPontos = false;
+let sincronizacaoPendente = false;
+
+async function sincronizarPontosSupabase(){
+
+  if(sincronizandoPontos){
+    sincronizacaoPendente = true;
+    return;
+  }
+
+  const playerId =
+    localStorage.getItem("playerId");
+
+  if(!playerId || typeof db === "undefined"){
+    return;
+  }
+
+  sincronizandoPontos = true;
+
+  try{
+
+    const { error } = await db
+      .from("players")
+      .update({
+        pontos: Number(pontos)
+      })
+      .eq("id", playerId);
+
+    if(error){
+      throw error;
+    }
+
+    console.log(
+      "☁️ Pontos salvos:",
+      pontos.toString()
+    );
+
+  }catch(error){
+
+    console.error(
+      "❌ Erro ao salvar pontos:",
+      error
+    );
+
+  }finally{
+
+    sincronizandoPontos = false;
+
+    if(sincronizacaoPendente){
+
+      sincronizacaoPendente = false;
+
+      setTimeout(
+        sincronizarPontosSupabase,
+        300
+      );
+
+    }
+
+  }
+
+}
+
+
+function atualizar(){
+
+  document.getElementById("pontos").textContent =
+    formatarNumero(pontos) + " PT";
+
+  let ganhoClique =
+    pontosPorClique *
+    multiplicador *
+    multiplicadorPets;
+
+  document.getElementById("porClique").textContent =
+    "+" + formatarNumero(ganhoClique) +
+    " PT por clique";
+
+  mostrarPets();
+
+  criarUpgrades();
+  criarPets();
+
+  atualizarLoja();
+
+  /* ☁️ Atualiza os pontos no banco */
+  clearTimeout(window.timerSalvarPontos);
+
+  window.timerSalvarPontos =
+    setTimeout(
+      sincronizarPontosSupabase,
+      500
+    );
+
+}
+
+
+/* =========================
+   AUTOMÁTICO
+========================= */
+
+setInterval(()=>{
+
+  if(automatico <= 0n) return;
+
+  let ganho =
+    automatico *
+    multiplicador *
+    multiplicadorPets;
+
+  pontos += ganho;
+
+  atualizar();
+
+},1000);
+
+
+/* =========================
+   REINICIAR
+========================= */
+
+document.getElementById("reiniciar").onclick = function(){
+
+  const confirmar = confirm(
+    "⚠️ Tem certeza que quer reiniciar o jogo?\n\n" +
+    "Todo o seu progresso será perdido."
+  );
+
+  if(!confirmar) return;
+
+  pontos = 0n;
+  pontosPorClique = 1n;
+  automatico = 0n;
+  multiplicador = 1n;
+  multiplicadorPets = 1n;
+
+  gemas = 0;
+
+  comprados = [];
+  petsComprados = [];
+  petsLoja = [];
+
+  document.getElementById("mensagem")
+    .textContent = "🔄 Jogo reiniciado!";
+
+  atualizar();
+
+};
+
+
+/* =========================
+   INICIAR
+========================= */
+
+atualizar();
+
+</script>
+
+<!-- ============================= -->
+<!-- 🌐 PAINEL ADM -->
+<!-- ============================= -->
+
+<button id="botaoADM">🌐</button>
+
+<div id="painelADM">
+
+  <div class="cabecalhoADM">
+    <span>👑 PAINEL DE ADMIN</span>
+    <button onclick="fecharADM()">✖</button>
+  </div>
+
+  <!-- ============================= -->
+  <!-- 📢 MENSAGENS -->
+  <!-- ============================= -->
+
+  <div class="secaoADM">
+    <h3>📢 MENSAGENS</h3>
+
+    <div class="botoesModo">
+      <button id="btnGlobal" onclick="modoMensagem('global')">
+        🌎 GLOBAL
+      </button>
+
+      <button id="btnPrivado" onclick="modoMensagem('privado')">
+        🔒 PRIVADO
+      </button>
+    </div>
+
+    <select
+      id="destinatarioADM"
+      style="display:none;"
+    >
+      <option value="">👥 Selecione um amigo</option>
+    </select>
+
+    <textarea
+      id="mensagemADM"
+      placeholder="Digite sua mensagem..."
+    ></textarea>
+
+    <button
+      class="botaoADMGrande"
+      onclick="enviarMensagemADM()"
+    >
+      📢 ENVIAR
+    </button>
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- 🎁 PRESENTES -->
+  <!-- ============================= -->
+
+  <div class="secaoADM">
+
+    <h3>🎁 PRESENTEAR JOGADOR</h3>
+
+    <select id="presenteJogador">
+      <option value="">👥 Selecione um amigo</option>
+    </select>
+
+    <select id="tipoPresente">
+
+      <option value="radioativo">
+        ☢️ Pet Radioativo
+      </option>
+
+      <option value="gemas">
+        💎 Gemas
+      </option>
+
+      <option value="pontos">
+        💰 Pontos
+      </option>
+
+    </select>
+
+    <button
+      class="botaoADMGrande"
+      onclick="enviarPresente()"
+    >
+      🎁 ENVIAR PRESENTE
+    </button>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- 🎉 EVENTOS -->
+  <!-- ============================= -->
+
+  <div class="secaoADM">
+
+    <h3>🎉 EVENTOS</h3>
+
+    <p class="textoEvento">
+      Até 6 eventos podem ficar ativos ao mesmo tempo.
+    </p>
+
+    <div class="gradeEventos">
+
+      <button onclick="ativarEvento('☢️',4)">☢️</button>
+      <button onclick="ativarEvento('🔥',2)">🔥</button>
+      <button onclick="ativarEvento('⚡',2)">⚡</button>
+      <button onclick="ativarEvento('💨',2)">💨</button>
+      <button onclick="ativarEvento('💤',2)">💤</button>
+
+      <button onclick="ativarEvento('🎉',2)">🎉</button>
+      <button onclick="ativarEvento('💘',2)">💘</button>
+      <button onclick="ativarEvento('🌹',2)">🌹</button>
+      <button onclick="ativarEvento('🌋',2)">🌋</button>
+      <button onclick="ativarEvento('🍁',2)">🍁</button>
+
+      <button onclick="ativarEvento('🍄',2)">🍄</button>
+      <button onclick="ativarEvento('🌀',2)">🌀</button>
+      <button onclick="ativarEvento('🌪️',2)">🌪️</button>
+      <button onclick="ativarEvento('🌩️',2)">🌩️</button>
 
     </div>
 
-</section>
+    <div class="eventoAtivoADM">
+
+      <b>
+        Eventos ativos:
+        <span id="contadorEventosADM">0</span>/6
+      </b>
+
+      <div id="listaEventosADM">
+        Nenhum
+      </div>
+
+      <div class="linhaResultado">
+        Multiplicador:
+        <b id="multiplicadorEventosADM">1x</b>
+      </div>
+
+    </div>
+
+  </div>
 
 
-<!-- =====================================
-     JAVASCRIPT
-===================================== -->
+  <!-- ============================= -->
+  <!-- 🍀 SORTE -->
+  <!-- ============================= -->
+
+  <div class="secaoADM">
+
+    <h3>🍀 EVENTOS DE SORTE</h3>
+
+    <div class="gradeEventos">
+
+      <button onclick="ativarEventoSorte('☘️',4)">
+        ☘️
+      </button>
+
+      <button onclick="ativarEventoSorte('🍀',8)">
+        🍀
+      </button>
+
+    </div>
+
+    <div class="eventoAtivoADM">
+
+      <div id="listaSorteADM">
+        Nenhum
+      </div>
+
+      <div class="linhaResultado">
+        Bônus total:
+        <b id="bonusSorteADM">0%</b>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- 👑 DAR ADM -->
+  <!-- ============================= -->
+
+  <div class="secaoADM">
+
+    <h3>👑 ADMINISTRADORES</h3>
+
+    <select id="novoADM">
+      <option value="">👥 Selecione um amigo</option>
+    </select>
+
+    <button
+      class="botaoADMGrande"
+      onclick="darPainelADM()"
+    >
+      👑 DAR PAINEL DE ADM
+    </button>
+
+  </div>
+
+</div>
+
+
+<style>
+
+#botaoADM{
+  position:fixed;
+  width:55px;
+  height:55px;
+  right:15px;
+  top:15px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#222;
+  color:white;
+
+  font-size:28px;
+
+  z-index:99999;
+
+  box-shadow:0 4px 15px #000;
+
+  touch-action:none;
+  cursor:grab;
+}
+
+#botaoADM:active{
+  cursor:grabbing;
+}
+
+
+#painelADM{
+
+  display:none;
+
+  position:fixed;
+
+  left:50%;
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+  width:92%;
+  max-width:430px;
+
+  max-height:90vh;
+
+  overflow-y:auto;
+
+  background:#151515;
+  color:white;
+
+  border:2px solid #444;
+  border-radius:18px;
+
+  padding:15px;
+
+  z-index:100000;
+
+  box-shadow:0 0 40px #000;
+}
+
+
+.cabecalhoADM{
+
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  font-size:20px;
+  font-weight:bold;
+
+  margin-bottom:15px;
+}
+
+
+.cabecalhoADM button{
+
+  border:none;
+
+  background:#333;
+  color:white;
+
+  border-radius:8px;
+
+  padding:7px 10px;
+
+  font-size:16px;
+}
+
+
+.secaoADM{
+
+  background:#202020;
+
+  border-radius:14px;
+
+  padding:12px;
+
+  margin-bottom:12px;
+}
+
+
+.secaoADM h3{
+
+  margin-top:0;
+
+  font-size:17px;
+}
+
+
+.botoesModo{
+
+  display:flex;
+
+  gap:8px;
+
+  margin-bottom:10px;
+}
+
+
+.botoesModo button{
+
+  flex:1;
+
+  padding:10px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#333;
+
+  color:white;
+
+  font-weight:bold;
+}
+
+
+#mensagemADM,
+#destinatarioADM,
+#presenteJogador,
+#novoADM,
+#tipoPresente{
+
+  width:100%;
+
+  margin-top:8px;
+
+  padding:10px;
+
+  border:none;
+
+  border-radius:9px;
+
+  background:#101010;
+
+  color:white;
+}
+
+
+#mensagemADM{
+
+  min-height:80px;
+
+  resize:none;
+}
+
+
+.botaoADMGrande{
+
+  width:100%;
+
+  margin-top:10px;
+
+  padding:11px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#333;
+
+  color:white;
+
+  font-weight:bold;
+}
+
+
+.gradeEventos{
+
+  display:grid;
+
+  grid-template-columns:repeat(5,1fr);
+
+  gap:7px;
+}
+
+
+.gradeEventos button{
+
+  height:48px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#303030;
+
+  color:white;
+
+  font-size:24px;
+}
+
+
+.eventoAtivoADM{
+
+  margin-top:12px;
+
+  padding:10px;
+
+  background:#101010;
+
+  border-radius:10px;
+
+  text-align:center;
+
+  line-height:1.7;
+}
+
+
+.textoEvento{
+
+  opacity:.8;
+
+  font-size:13px;
+}
+
+
+.linhaEvento{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  background:#202020;
+
+  padding:7px 9px;
+
+  margin-top:6px;
+
+  border-radius:8px;
+}
+
+
+.linhaResultado{
+
+  margin-top:8px;
+
+  padding-top:8px;
+
+  border-top:1px solid #333;
+}
+
+</style>
+
 
 <script>
 
+/* ============================= */
+/* 🌐 BOTÃO ADM */
+/* ============================= */
 
-/* =====================================
-   COMPRA
-===================================== */
+const botaoADM =
+  document.getElementById("botaoADM");
 
-let produtoSelecionado = "";
-let precoSelecionado = "";
-
-
-function abrirCompra(produto, preco) {
-
-    produtoSelecionado = produto;
-    precoSelecionado = preco;
+const painelADM =
+  document.getElementById("painelADM");
 
 
-    document.getElementById(
-        "produtoConfirmacao"
-    ).textContent = produto;
+/* ============================= */
+/* 👑 ADM PRINCIPAL + ACESSO */
+/* ============================= */
 
+function nomeADMNormalizado(nome){
 
-    document.getElementById(
-        "precoConfirmacao"
-    ).textContent = preco;
+  return (nome || "")
+    .trim()
+    .toLowerCase();
 
+}
 
-    document.getElementById(
-        "produtoFormulario"
-    ).textContent = produto;
+function pegarADMsConcedidos(){
 
+  try{
+    return JSON.parse(
+      localStorage.getItem("admsConcedidos") || "[]"
+    );
+  }catch(e){
+    return [];
+  }
+}
 
-    document.getElementById(
-        "precoFormulario"
-    ).textContent = preco;
+function ehADMAtual(){
 
+  const codigo =
+    localStorage.getItem("codigoPerfil") || "";
 
-    document.getElementById(
-        "confirmacao"
-    ).style.display = "block";
+  const principal =
+    localStorage.getItem("admPrincipalCodigo") || "";
 
+  if(codigo && principal && codigo === principal){
+    return true;
+  }
 
-    document.getElementById(
-        "formularioPedido"
-    ).style.display = "none";
+  return pegarADMsConcedidos().some(function(adm){
+    return adm.codigo === codigo;
+  });
+}
 
+function atualizarAcessoADM(){
 
-    document.getElementById(
-        "janelaCompra"
-    ).style.display = "flex";
+  const acesso = ehADMAtual();
+
+  if(botaoADM){
+    botaoADM.style.display = acesso ? "block" : "none";
+  }
+
+  if(!acesso && painelADM){
+    painelADM.style.display = "none";
+  }
+
+  if(acesso){
+    atualizarSeletoresADM();
+  }
+
+}
+
+function atualizarSeletoresADM(){
+
+  const amigos =
+    (typeof pegarAmigos === "function") ? pegarAmigos() : [];
+
+  const ids = [
+    "destinatarioADM",
+    "presenteJogador",
+    "novoADM"
+  ];
+
+  ids.forEach(function(id){
+
+    const select = document.getElementById(id);
+
+    if(!select) return;
+
+    const valorAtual = select.value;
+
+    select.innerHTML =
+      '<option value="">👥 Selecione um amigo</option>';
+
+    amigos.forEach(function(amigo){
+
+      const option = document.createElement("option");
+
+      option.value = String(amigo.codigo || "");
+
+      option.textContent =
+        (amigo.emoji || "👤") + " " +
+        (amigo.nome || "Amigo") +
+        " (#" + (amigo.codigo || "") + ")";
+
+      select.appendChild(option);
+
+    });
+
+    if(valorAtual && Array.from(select.options).some(function(o){
+      return o.value === valorAtual;
+    })){
+      select.value = valorAtual;
+    }
+
+  });
 
 }
 
 
-function mostrarFormulario() {
+let arrastandoADM = false;
+let arrastouADM = false;
 
-    document.getElementById(
-        "confirmacao"
-    ).style.display = "none";
+let inicioX = 0;
+let inicioY = 0;
+
+let posX = 0;
+let posY = 0;
 
 
-    document.getElementById(
-        "formularioPedido"
-    ).style.display = "block";
+botaoADM.addEventListener(
+  "click",
+  function(){
+
+    if(!ehADMAtual()){
+      return;
+    }
+
+    if(arrastouADM){
+      return;
+    }
+
+    atualizarSeletoresADM();
+
+    painelADM.style.display = "block";
+
+  }
+);
+
+
+function fecharADM(){
+
+  painelADM.style.display = "none";
 
 }
 
 
-function voltarConfirmacao() {
+/* ============================= */
+/* 🖐️ ARRASTAR BOTÃO */
+/* ============================= */
+
+botaoADM.addEventListener(
+  "pointerdown",
+  function(e){
+
+    arrastandoADM = true;
+
+    arrastouADM = false;
+
+    inicioX = e.clientX - posX;
+    inicioY = e.clientY - posY;
+
+    botaoADM.setPointerCapture(e.pointerId);
+
+  }
+);
+
+
+botaoADM.addEventListener(
+  "pointermove",
+  function(e){
+
+    if(!arrastandoADM){
+      return;
+    }
+
+    let novoX =
+      e.clientX - inicioX;
+
+    let novoY =
+      e.clientY - inicioY;
+
+
+    if(
+      Math.abs(novoX - posX) > 5 ||
+      Math.abs(novoY - posY) > 5
+    ){
+
+      arrastouADM = true;
+
+    }
+
+
+    posX = novoX;
+    posY = novoY;
+
+
+    botaoADM.style.transform =
+      "translate(" +
+      posX +
+      "px," +
+      posY +
+      "px)";
+
+  }
+);
+
+
+botaoADM.addEventListener(
+  "pointerup",
+  function(){
+
+    arrastandoADM = false;
+
+    localStorage.setItem(
+      "posADM",
+      JSON.stringify({
+        x:posX,
+        y:posY
+      })
+    );
+
+  }
+);
+
+
+/* RECUPERAR POSIÇÃO */
+
+try{
+
+  const salvo =
+    JSON.parse(
+      localStorage.getItem("posADM")
+    );
+
+  if(salvo){
+
+    posX = salvo.x;
+    posY = salvo.y;
+
+    botaoADM.style.transform =
+      "translate(" +
+      posX +
+      "px," +
+      posY +
+      "px)";
+
+  }
+
+}catch(e){}
+
+
+/* ============================= */
+/* 📢 MENSAGENS */
+/* ============================= */
+
+let modoAtual = "global";
+
+
+function modoMensagem(modo){
+
+  modoAtual = modo;
+
+  const campo =
+    document.getElementById(
+      "destinatarioADM"
+    );
+
+
+  if(modo === "privado"){
+
+    atualizarSeletoresADM();
+
+    campo.style.display = "block";
 
     document.getElementById(
-        "formularioPedido"
-    ).style.display = "none";
-
+      "btnPrivado"
+    ).style.background = "#555";
 
     document.getElementById(
-        "confirmacao"
-    ).style.display = "block";
+      "btnGlobal"
+    ).style.background = "#333";
+
+  }else{
+
+    campo.style.display = "none";
+
+    document.getElementById(
+      "btnGlobal"
+    ).style.background = "#555";
+
+    document.getElementById(
+      "btnPrivado"
+    ).style.background = "#333";
+
+  }
 
 }
 
 
-function fecharCompra() {
+function enviarMensagemADM(){
 
-    document.getElementById(
-        "janelaCompra"
-    ).style.display = "none";
+  if(!ehADMAtual()){
+    alert("❌ Você não é ADM.");
+    return;
+  }
+
+  const mensagem =
+    document.getElementById("mensagemADM").value.trim();
+
+  if(!mensagem){
+    alert("Digite uma mensagem!");
+    return;
+  }
+
+  if(modoAtual === "global"){
+
+    localStorage.setItem(
+      "mensagemGlobalADM",
+      JSON.stringify({
+        texto:mensagem,
+        data:Date.now()
+      })
+    );
+
+    mostrarMensagemADM(mensagem);
+
+    alert("📢 Mensagem global enviada!");
+
+  }else{
+
+    const codigo =
+      document.getElementById("destinatarioADM").value;
+
+    const amigo = pegarAmigos().find(function(a){
+      return String(a.codigo) === String(codigo);
+    });
+
+    if(!amigo){
+      alert("👥 Escolha um amigo primeiro!");
+      return;
+    }
+
+    const chave = "mensagensADM_" + amigo.codigo;
+    let mensagens = [];
+
+    try{
+      mensagens = JSON.parse(localStorage.getItem(chave) || "[]");
+    }catch(e){ mensagens = []; }
+
+    mensagens.push({
+      texto:mensagem,
+      de:"ADM",
+      data:Date.now()
+    });
+
+    localStorage.setItem(chave, JSON.stringify(mensagens));
+
+    alert("🔒 Mensagem enviada para " + amigo.nome + "!");
+
+  }
+
+  document.getElementById("mensagemADM").value = "";
 
 }
 
 
-/* =====================================
-   WHATSAPP
-===================================== */
 
-function encomendarHugo() {
+/* ============================= */
+/* 🎁 PRESENTES */
+/* ============================= */
 
-    const rua =
-        document.getElementById(
-            "rua"
-        ).value.trim();
+function enviarPresente(){
+
+  if(!ehADMAtual()){
+    alert("❌ Você não é ADM.");
+    return;
+  }
+
+  const codigo =
+    document.getElementById("presenteJogador").value;
+
+  const tipo =
+    document.getElementById("tipoPresente").value;
+
+  const amigo = pegarAmigos().find(function(a){
+    return String(a.codigo) === String(codigo);
+  });
+
+  if(!amigo){
+    alert("👥 Escolha um amigo primeiro!");
+    return;
+  }
+
+  const chave = "presentesADM_" + amigo.codigo;
+  let presentes = [];
+
+  try{
+    presentes = JSON.parse(localStorage.getItem(chave) || "[]");
+  }catch(e){ presentes = []; }
+
+  presentes.push({
+    tipo:tipo,
+    de:"ADM",
+    data:Date.now()
+  });
+
+  localStorage.setItem(chave, JSON.stringify(presentes));
+
+  alert("🎁 Presente enviado para " + amigo.nome + "!");
+
+}
 
 
-    const numero =
-        document.getElementById(
-            "numeroCasa"
-        ).value.trim();
+
+/* ============================= */
+/* 🎉 SISTEMA DE EVENTOS */
+/* ============================= */
+
+const MAX_EVENTOS = 6;
+
+let eventosAtivos = [];
+
+let proximoIdEvento = 1;
 
 
-    const regiao =
-        document.getElementById(
-            "regiao"
-        ).value.trim();
+/* ATIVAR EVENTO NORMAL */
+
+function ativarEvento(
+  emoji,
+  multiplicador
+){
+
+  if(
+    eventosAtivos.length >= MAX_EVENTOS
+  ){
+
+    alert(
+      "⚠️ Já existem 6 eventos ativos!"
+    );
+
+    return;
+
+  }
 
 
-    const cidade =
-        document.getElementById(
-            "cidade"
-        ).value.trim();
+  eventosAtivos.push({
+
+    id:proximoIdEvento++,
+
+    tipo:"normal",
+
+    emoji:emoji,
+
+    multiplicador:multiplicador,
+
+    tempo:60
+
+  });
 
 
-    const pagamento =
-        document.getElementById(
-            "pagamento"
-        ).value;
+  atualizarEventosADM();
+
+  atualizarFundoRadioativo();
+
+}
 
 
-    if (
-        !rua ||
-        !numero ||
-        !regiao ||
-        !cidade ||
-        !pagamento
-    ) {
+/* ============================= */
+/* 🍀 EVENTOS DE SORTE */
+/* ============================= */
 
-        alert(
-            "⚠️ Preencha todos os campos antes de encomendar!"
-        );
+function ativarEventoSorte(
+  emoji,
+  bonus
+){
+
+  if(
+    eventosAtivos.length >= MAX_EVENTOS
+  ){
+
+    alert(
+      "⚠️ Já existem 6 eventos ativos!"
+    );
+
+    return;
+
+  }
+
+
+  eventosAtivos.push({
+
+    id:proximoIdEvento++,
+
+    tipo:"sorte",
+
+    emoji:emoji,
+
+    bonus:bonus,
+
+    tempo:60
+
+  });
+
+
+  atualizarEventosADM();
+
+}
+
+
+/* ============================= */
+/* 🔄 ATUALIZAR EVENTOS */
+/* ============================= */
+
+function atualizarEventosADM(){
+
+  const normais =
+    eventosAtivos.filter(
+      e => e.tipo === "normal"
+    );
+
+
+  const sortes =
+    eventosAtivos.filter(
+      e => e.tipo === "sorte"
+    );
+
+
+  document.getElementById(
+    "contadorEventosADM"
+  ).textContent =
+    eventosAtivos.length;
+
+
+  /* EVENTOS NORMAIS */
+
+  if(normais.length === 0){
+
+    document.getElementById(
+      "listaEventosADM"
+    ).innerHTML =
+      "Nenhum";
+
+  }else{
+
+    document.getElementById(
+      "listaEventosADM"
+    ).innerHTML =
+
+      normais.map(
+        e =>
+
+        `<div class="linhaEvento">
+
+          <span>
+            ${e.emoji}
+            ${e.multiplicador}x
+          </span>
+
+          <b>
+            ${e.tempo}s
+          </b>
+
+        </div>`
+
+      ).join("");
+
+  }
+
+
+  /* MULTIPLICADOR */
+
+  let multiplicadorTotal = 1;
+
+
+  normais.forEach(
+    e => {
+
+      multiplicadorTotal *=
+        e.multiplicador;
+
+    }
+  );
+
+
+  document.getElementById(
+    "multiplicadorEventosADM"
+  ).textContent =
+    multiplicadorTotal + "x";
+
+
+  /* EVENTOS DE SORTE */
+
+  if(sortes.length === 0){
+
+    document.getElementById(
+      "listaSorteADM"
+    ).innerHTML =
+      "Nenhum";
+
+  }else{
+
+    document.getElementById(
+      "listaSorteADM"
+    ).innerHTML =
+
+      sortes.map(
+        e =>
+
+        `<div class="linhaEvento">
+
+          <span>
+            ${e.emoji}
+            +${e.bonus}%
+          </span>
+
+          <b>
+            ${e.tempo}s
+          </b>
+
+        </div>`
+
+      ).join("");
+
+  }
+
+
+  /* BÔNUS TOTAL */
+
+  let bonusTotal = 0;
+
+
+  sortes.forEach(
+    e => {
+
+      bonusTotal += e.bonus;
+
+    }
+  );
+
+
+  document.getElementById(
+    "bonusSorteADM"
+  ).textContent =
+    "+" + bonusTotal + "%";
+
+
+  atualizarFundoRadioativo();
+
+}
+
+
+/* ============================= */
+/* ⏱️ CONTADOR DOS EVENTOS */
+/* ============================= */
+
+setInterval(
+
+  function(){
+
+    if(eventosAtivos.length === 0){
+
+      return;
+
+    }
+
+
+    eventosAtivos.forEach(
+      e => {
+
+        e.tempo--;
+
+      }
+    );
+
+
+    eventosAtivos =
+      eventosAtivos.filter(
+        e => e.tempo > 0
+      );
+
+
+    atualizarEventosADM();
+
+  },
+
+  1000
+
+);
+
+
+/* ============================= */
+/* ☢️ FUNDO RADIOATIVO */
+/* ============================= */
+
+function atualizarFundoRadioativo(){
+
+  const radioativo =
+    eventosAtivos.some(
+      e =>
+        e.tipo === "normal" &&
+        e.emoji === "☢️"
+    );
+
+
+  if(radioativo){
+
+    document.body.classList.add(
+      "eventoRadioativo"
+    );
+
+  }else{
+
+    document.body.classList.remove(
+      "eventoRadioativo"
+    );
+
+  }
+
+}
+
+
+/* ============================= */
+/* ⚡ MULTIPLICADOR DOS EVENTOS */
+/* ============================= */
+
+function obterMultiplicadorEventos(){
+
+  let total = 1;
+
+
+  eventosAtivos.forEach(
+    e => {
+
+      if(e.tipo === "normal"){
+
+        total *= e.multiplicador;
+
+      }
+
+    }
+  );
+
+
+  return total;
+
+}
+
+
+/* ============================= */
+/* 🍀 BÔNUS DE SORTE */
+/* ============================= */
+
+function obterBonusSorte(){
+
+  let total = 0;
+
+
+  eventosAtivos.forEach(
+    e => {
+
+      if(e.tipo === "sorte"){
+
+        total += e.bonus;
+
+      }
+
+    }
+  );
+
+
+  return total;
+
+}
+
+
+/* ============================= */
+/* 👑 DAR ADM */
+/* ============================= */
+
+function darPainelADM(){
+
+  if(!ehADMAtual()){
+    alert("❌ Você não é ADM.");
+    return;
+  }
+
+  const codigo =
+    document.getElementById("novoADM").value;
+
+  const amigo = pegarAmigos().find(function(a){
+    return String(a.codigo) === String(codigo);
+  });
+
+  if(!amigo){
+    alert("👥 Só é possível dar ADM para um amigo.");
+    return;
+  }
+
+  if(String(amigo.codigo) === String(localStorage.getItem("admPrincipalCodigo"))){
+    alert("👑 Essa pessoa já é o ADM principal.");
+    return;
+  }
+
+  const adms = pegarADMsConcedidos();
+
+  if(adms.some(function(adm){
+    return String(adm.codigo) === String(amigo.codigo);
+  })){
+    alert("👑 " + amigo.nome + " já é ADM.");
+    return;
+  }
+
+  adms.push({
+    codigo:String(amigo.codigo),
+    nome:amigo.nome,
+    emoji:amigo.emoji || "👤",
+    concedidoPor:localStorage.getItem("codigoPerfil") || ""
+  });
+
+  localStorage.setItem(
+    "admsConcedidos",
+    JSON.stringify(adms)
+  );
+
+  alert("👑 " + amigo.nome + " agora tem painel de ADM!");
+
+}
+
+
+
+/* ============================= */
+/* ☢️ ESTILO RADIOATIVO */
+/* ============================= */
+
+const estiloRadioativo =
+  document.createElement("style");
+
+
+estiloRadioativo.textContent = `
+
+body.eventoRadioativo{
+
+  background-color:#082b0b !important;
+
+  background-image:
+
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(70,255,70,.18) 0 2px,
+      transparent 3px
+    ),
+
+    radial-gradient(
+      circle at 70% 60%,
+      rgba(120,255,80,.15) 0 2px,
+      transparent 3px
+    );
+
+  background-size:
+    45px 45px,
+    70px 70px;
+
+}
+
+`;
+
+
+document.head.appendChild(
+  estiloRadioativo
+);
+
+
+/* ============================= */
+/* 🚀 INICIAR */
+/* ============================= */
+
+modoMensagem("global");
+
+atualizarEventosADM();
+
+</script>
+<script>
+/* 🛟 RECUPERAR E PROTEGER O BOTÃO ADM */
+
+const admSeguro = document.getElementById("botaoADM");
+
+if(admSeguro){
+
+  /* Apaga a posição antiga que deixou o botão perdido */
+  localStorage.removeItem("posADM");
+
+  /* Coloca o botão de volta no canto */
+  admSeguro.style.transform = "translate(0px, 0px)";
+
+  /* Impede que ele fique fora da tela */
+  admSeguro.addEventListener("pointermove", function(){
+
+    setTimeout(function(){
+
+      const caixa = admSeguro.getBoundingClientRect();
+
+      let x = 0;
+      let y = 0;
+
+      if(caixa.right < 20 || caixa.left > window.innerWidth - 20){
+        x = 0;
+      }
+
+      if(caixa.bottom < 20 || caixa.top > window.innerHeight - 20){
+        y = 0;
+      }
+
+      if(
+        caixa.right < 20 ||
+        caixa.left > window.innerWidth - 20 ||
+        caixa.bottom < 20 ||
+        caixa.top > window.innerHeight - 20
+      ){
+
+        admSeguro.style.transform =
+          "translate(0px, 0px)";
+
+      }
+
+    }, 0);
+
+  });
+
+}
+  
+</script>
+  <!-- 📢 NOTIFICAÇÃO DO ADM -->
+
+<div id="notificacaoADM">
+  <div id="tituloNotificacaoADM">📢 Mensagem do ADM</div>
+  <div id="textoNotificacaoADM"></div>
+</div>
+
+<style>
+
+#notificacaoADM{
+  position:fixed;
+
+  top:85px;
+  left:50%;
+
+  transform:translateX(-50%) translateY(-20px);
+
+  width:90%;
+  max-width:420px;
+
+  background:#222;
+
+  color:white;
+
+  padding:14px 16px;
+
+  border-radius:14px;
+
+  border:2px solid #444;
+
+  box-shadow:0 5px 25px rgba(0,0,0,.6);
+
+  text-align:center;
+
+  z-index:999999;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  transition:
+    opacity .25s,
+    transform .25s;
+}
+
+#notificacaoADM.mostrar{
+
+  opacity:1;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
+
+}
+
+#tituloNotificacaoADM{
+
+  font-size:17px;
+
+  font-weight:bold;
+
+  margin-bottom:5px;
+
+}
+
+#textoNotificacaoADM{
+
+  font-size:15px;
+
+  line-height:1.4;
+
+}
+
+</style>
+
+<script>
+
+let timerNotificacaoADM = null;
+
+function mostrarMensagemADM(mensagem){
+
+  const caixa =
+    document.getElementById(
+      "notificacaoADM"
+    );
+
+  const texto =
+    document.getElementById(
+      "textoNotificacaoADM"
+    );
+
+  texto.textContent = mensagem;
+
+  caixa.classList.add("mostrar");
+
+  clearTimeout(timerNotificacaoADM);
+
+  timerNotificacaoADM = setTimeout(
+    function(){
+
+      caixa.classList.remove("mostrar");
+
+    },
+    5000
+  );
+
+}
+
+</script>
+  <script>
+
+  </script>
+  <!-- 🎉 EVENTOS ATIVOS NA TELA DO JOGADOR -->
+
+<div id="eventosJogador">
+  <div id="listaEventosJogador"></div>
+</div>
+
+<style>
+
+#eventosJogador{
+
+  position:fixed;
+
+  top:75px;
+  left:10px;
+
+  z-index:99998;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:6px;
+
+  pointer-events:none;
+
+}
+
+.eventoJogador{
+
+  background:rgba(20,20,20,.92);
+
+  color:white;
+
+  border:1px solid #555;
+
+  border-radius:10px;
+
+  padding:6px 10px;
+
+  min-width:70px;
+
+  text-align:left;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  box-shadow:0 3px 10px rgba(0,0,0,.5);
+
+}
+
+</style>
+
+<script>
+
+/* 🎉 MOSTRAR EVENTOS PARA O JOGADOR */
+
+function atualizarEventosJogador(){
+
+  const lista =
+    document.getElementById(
+      "listaEventosJogador"
+    );
+
+  if(!lista){
+    return;
+  }
+
+  lista.innerHTML = "";
+
+  if(
+    typeof eventosAtivos === "undefined" ||
+    eventosAtivos.length === 0
+  ){
+
+    return;
+
+  }
+
+  eventosAtivos.forEach(function(evento){
+
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "eventoJogador";
+
+    if(evento.tipo === "normal"){
+
+      item.textContent =
+        evento.emoji +
+        " " +
+        evento.tempo +
+        "s";
+
+    }else{
+
+      item.textContent =
+        evento.emoji +
+        " +" +
+        evento.bonus +
+        "% " +
+        evento.tempo +
+        "s";
+
+    }
+
+    lista.appendChild(item);
+
+  });
+
+}
+
+
+/* 🔄 ATUALIZAR A CADA SEGUNDO */
+
+setInterval(
+  atualizarEventosJogador,
+  1000
+);
+
+atualizarEventosJogador();
+
+</script>
+  <!-- =============================== -->
+<!-- 👤 PERFIL DO JOGADOR -->
+<!-- =============================== -->
+
+<div id="botaoPerfil">👤</div>
+
+<div id="painelPerfil">
+
+  <div id="perfilCaixa">
+
+    <button id="fecharPerfil">✖</button>
+
+    <h2>Edite seu perfil! 👤</h2>
+
+    <label>Escolha seu perfil:</label>
+
+    <div id="emojisPerfil">
+
+      <button class="emojiEscolha">🤥</button>
+      <button class="emojiEscolha">😘</button>
+      <button class="emojiEscolha">😍</button>
+      <button class="emojiEscolha">🤩</button>
+      <button class="emojiEscolha">😚</button>
+      <button class="emojiEscolha">😙</button>
+
+      <button class="emojiEscolha">😀</button>
+      <button class="emojiEscolha">😃</button>
+      <button class="emojiEscolha">🥹</button>
+      <button class="emojiEscolha">🥳</button>
+      <button class="emojiEscolha">😂</button>
+      <button class="emojiEscolha">😵</button>
+
+      <button class="emojiEscolha">😩</button>
+      <button class="emojiEscolha">🤓</button>
+      <button class="emojiEscolha">🤑</button>
+      <button class="emojiEscolha">🤥</button>
+      <button class="emojiEscolha">😇</button>
+
+    </div>
+
+    <label>Nome:</label>
+
+    <input
+      type="text"
+      id="nomePerfil"
+      placeholder="Digite seu nome"
+      maxlength="20"
+    >
+
+    <label>
+      Sobrenome
+      <span>(opcional)</span>:
+    </label>
+
+    <input
+      type="text"
+      id="sobrenomePerfil"
+      placeholder="Digite seu sobrenome"
+      maxlength="20"
+    >
+
+    <label>Código único:</label>
+
+    <div id="codigoArea">
+
+      <span>#</span>
+
+      <input
+        type="text"
+        id="codigoPerfil"
+        placeholder="Seu código"
+        maxlength="8"
+      >
+
+    </div>
+
+    <button id="salvarPerfil">
+      💾 Salvar perfil
+    </button>
+
+    <p id="mensagemPerfil"></p>
+
+  </div>
+
+</div>
+
+
+<style>
+
+/* =============================== */
+/* 👤 BOTÃO DO PERFIL */
+/* =============================== */
+
+#botaoPerfil{
+
+  position:fixed;
+
+  right:15px;
+  top:120px;
+
+  width:52px;
+  height:52px;
+
+  background:#222;
+
+  border:2px solid #555;
+
+  border-radius:50%;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  font-size:27px;
+
+  z-index:99999;
+
+  cursor:pointer;
+
+  user-select:none;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.5);
+
+}
+
+
+#botaoPerfil:active{
+
+  transform:scale(0.95);
+
+}
+
+
+/* =============================== */
+/* 📋 PAINEL */
+/* =============================== */
+
+#painelPerfil{
+
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,0.75);
+
+  z-index:99998;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:20px;
+
+}
+
+
+/* =============================== */
+/* 📦 CAIXA */
+/* =============================== */
+
+#perfilCaixa{
+
+  position:relative;
+
+  width:100%;
+
+  max-width:360px;
+
+  max-height:90vh;
+
+  overflow-y:auto;
+
+  background:#181818;
+
+  border:2px solid #444;
+
+  border-radius:18px;
+
+  padding:25px;
+
+  color:white;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.7);
+
+  animation:abrirPerfil .2s ease;
+
+}
+
+
+@keyframes abrirPerfil{
+
+  from{
+
+    transform:scale(.8);
+
+    opacity:0;
+
+  }
+
+  to{
+
+    transform:scale(1);
+
+    opacity:1;
+
+  }
+
+}
+
+
+/* =============================== */
+/* ❌ FECHAR */
+/* =============================== */
+
+#fecharPerfil{
+
+  position:absolute;
+
+  right:12px;
+
+  top:12px;
+
+  width:32px;
+
+  height:32px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#333;
+
+  color:white;
+
+  font-size:16px;
+
+  cursor:pointer;
+
+}
+
+
+/* =============================== */
+/* 📝 TÍTULO */
+/* =============================== */
+
+#perfilCaixa h2{
+
+  margin-top:5px;
+
+  margin-bottom:22px;
+
+  text-align:center;
+
+  font-size:22px;
+
+}
+
+
+/* =============================== */
+/* 🏷️ LABELS */
+/* =============================== */
+
+#perfilCaixa label{
+
+  display:block;
+
+  text-align:left;
+
+  margin-top:14px;
+
+  margin-bottom:6px;
+
+  font-weight:bold;
+
+}
+
+
+#perfilCaixa label span{
+
+  color:#999;
+
+  font-weight:normal;
+
+  font-size:13px;
+
+}
+
+
+/* =============================== */
+/* 😀 EMOJIS */
+/* =============================== */
+
+#emojisPerfil{
+
+  display:grid;
+
+  grid-template-columns:repeat(6,1fr);
+
+  gap:7px;
+
+  margin:10px 0 18px;
+
+}
+
+
+.emojiEscolha{
+
+  width:100%;
+
+  aspect-ratio:1;
+
+  border:2px solid transparent;
+
+  border-radius:10px;
+
+  background:#292929;
+
+  font-size:25px;
+
+  cursor:pointer;
+
+}
+
+
+.emojiEscolha:active{
+
+  transform:scale(.9);
+
+}
+
+
+.emojiEscolha.selecionado{
+
+  border:2px solid #2979ff;
+
+  background:#333;
+
+}
+
+
+/* =============================== */
+/* ✏️ INPUTS */
+/* =============================== */
+
+#perfilCaixa input{
+
+  width:100%;
+
+  padding:12px;
+
+  border:none;
+
+  outline:none;
+
+  border-radius:10px;
+
+  background:#292929;
+
+  color:white;
+
+  font-size:16px;
+
+}
+
+
+#perfilCaixa input:focus{
+
+  outline:2px solid #555;
+
+}
+
+
+/* =============================== */
+/* 🔢 CÓDIGO */
+/* =============================== */
+
+#codigoArea{
+
+  display:flex;
+
+  align-items:center;
+
+  background:#292929;
+
+  border-radius:10px;
+
+  overflow:hidden;
+
+}
+
+
+#codigoArea span{
+
+  padding-left:13px;
+
+  font-size:18px;
+
+  font-weight:bold;
+
+}
+
+
+#codigoArea input{
+
+  background:transparent;
+
+  border-radius:0;
+
+}
+
+
+/* =============================== */
+/* 💾 SALVAR */
+/* =============================== */
+
+#salvarPerfil{
+
+  width:100%;
+
+  margin-top:22px;
+
+  padding:13px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#2962ff;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+
+#salvarPerfil:active{
+
+  transform:scale(.97);
+
+}
+
+
+/* =============================== */
+/* 💬 MENSAGEM */
+/* =============================== */
+
+#mensagemPerfil{
+
+  text-align:center;
+
+  margin-bottom:0;
+
+  font-size:14px;
+
+  color:#7CFF7C;
+
+}
+
+</style>
+
+
+<script>
+
+/* =============================== */
+/* 🔗 ELEMENTOS */
+/* =============================== */
+
+const botaoPerfil =
+  document.getElementById("botaoPerfil");
+
+const painelPerfil =
+  document.getElementById("painelPerfil");
+
+const fecharPerfil =
+  document.getElementById("fecharPerfil");
+
+const salvarPerfil =
+  document.getElementById("salvarPerfil");
+
+const nomePerfil =
+  document.getElementById("nomePerfil");
+
+const sobrenomePerfil =
+  document.getElementById("sobrenomePerfil");
+
+const codigoPerfil =
+  document.getElementById("codigoPerfil");
+
+const mensagemPerfil =
+  document.getElementById("mensagemPerfil");
+
+const botoesEmoji =
+  document.querySelectorAll(".emojiEscolha");
+
+
+/* =============================== */
+/* 😀 EMOJI */
+/* =============================== */
+
+let emojiSelecionado =
+  localStorage.getItem("emojiPerfil") || "😀";
+
+
+/* =============================== */
+/* 🔢 GERAR CÓDIGO */
+/* =============================== */
+
+function gerarCodigo(){
+
+  let codigo;
+
+  do{
+
+    codigo =
+      Math.floor(
+        10000000 +
+        Math.random() * 90000000
+      ).toString();
+
+  }
+
+  while(
+    codigo ===
+    localStorage.getItem("codigoPerfil")
+  );
+
+  return codigo;
+
+}
+
+
+/* =============================== */
+/* 📥 CARREGAR PERFIL */
+/* =============================== */
+
+function carregarPerfil(){
+
+  let codigo =
+    localStorage.getItem("codigoPerfil");
+
+
+  if(!codigo){
+
+    codigo = gerarCodigo();
+
+    localStorage.setItem(
+      "codigoPerfil",
+      codigo
+    );
+
+  }
+
+
+  nomePerfil.value =
+    localStorage.getItem("nomePerfil") || "";
+
+
+  sobrenomePerfil.value =
+    localStorage.getItem("sobrenomePerfil") || "";
+
+
+  codigoPerfil.value =
+    codigo;
+
+
+  emojiSelecionado =
+    localStorage.getItem("emojiPerfil") || "😀";
+
+
+  atualizarEmoji();
+
+}
+
+
+/* =============================== */
+/* 😀 ATUALIZAR EMOJI */
+/* =============================== */
+
+function atualizarEmoji(){
+
+  botoesEmoji.forEach(function(botao){
+
+    botao.classList.remove("selecionado");
+
+    if(
+      botao.textContent ===
+      emojiSelecionado
+    ){
+
+      botao.classList.add("selecionado");
+
+    }
+
+  });
+
+}
+
+
+/* =============================== */
+/* 😀 ESCOLHER EMOJI */
+/* =============================== */
+
+botoesEmoji.forEach(function(botao){
+
+  botao.addEventListener(
+    "click",
+    function(){
+
+      emojiSelecionado =
+        botao.textContent;
+
+      localStorage.setItem(
+        "emojiPerfil",
+        emojiSelecionado
+      );
+
+      atualizarEmoji();
+
+    }
+  );
+
+});
+
+
+/* =============================== */
+/* 👤 ABRIR PERFIL */
+/* =============================== */
+
+botaoPerfil.addEventListener(
+  "click",
+  function(){
+
+    carregarPerfil();
+
+    painelPerfil.style.display =
+      "flex";
+
+  }
+);
+
+
+/* =============================== */
+/* ❌ FECHAR PERFIL */
+/* =============================== */
+
+fecharPerfil.addEventListener(
+  "click",
+  function(){
+
+    painelPerfil.style.display =
+      "none";
+
+    mensagemPerfil.textContent =
+      "";
+
+  }
+);
+
+
+/* =============================== */
+/* 💾 SALVAR PERFIL */
+/* =============================== */
+
+salvarPerfil.addEventListener(
+  "click",
+  async function(){
+
+    const nome =
+      nomePerfil.value.trim();
+
+    const sobrenome =
+      sobrenomePerfil.value.trim();
+
+    const codigo =
+      codigoPerfil.value
+        .replace("#","")
+        .trim();
+
+
+    if(!nome){
+
+      mensagemPerfil.style.color =
+        "#ff5555";
+
+      mensagemPerfil.textContent =
+        "❌ Digite seu nome!";
+
+      return;
+
+    }
+
+
+    if(!codigo){
+
+      mensagemPerfil.style.color =
+        "#ff5555";
+
+      mensagemPerfil.textContent =
+        "❌ Digite seu código!";
+
+      return;
+
+    }
+
+
+    if(!/^[0-9]+$/.test(codigo)){
+
+      mensagemPerfil.style.color =
+        "#ff5555";
+
+      mensagemPerfil.textContent =
+        "❌ O código deve ter apenas números!";
+
+      return;
+
+    }
+
+
+    /* ====================================== */
+    /* 👑 RESERVA DO NOME CALEBILSON */
+    /* ====================================== */
+
+    const nomeNormalizado =
+      nome.trim().toLowerCase();
+
+    const donoCalebilson =
+      localStorage.getItem("admPrincipalCodigo");
+
+    if(nomeNormalizado === "calebilson"){
+
+      if(donoCalebilson && donoCalebilson !== codigo){
+
+        mensagemPerfil.style.color = "#ff5555";
+        mensagemPerfil.textContent =
+          "❌ O nome calebilson já foi registrado por outra conta!";
 
         return;
+
+      }
+
+      if(!donoCalebilson){
+        localStorage.setItem(
+          "admPrincipalCodigo",
+          codigo
+        );
+      }
+
+    }
+
+
+    localStorage.setItem(
+      "nomePerfil",
+      nome
+    );
+
+    localStorage.setItem(
+      "sobrenomePerfil",
+      sobrenome
+    );
+
+    localStorage.setItem(
+      "codigoPerfil",
+      codigo
+    );
+
+    localStorage.setItem(
+      "emojiPerfil",
+      emojiSelecionado
+    );
+
+/* ☁️ SALVAR JOGADOR NO SUPABASE */
+try {
+
+  if(typeof db === "undefined"){
+    throw new Error("Supabase não foi carregado.");
+  }
+
+  let playerId =
+    localStorage.getItem("playerId");
+
+  let data = null;
+  let error = null;
+
+
+  /* 🔄 JOGADOR JÁ EXISTE */
+  if(playerId){
+
+    const resposta = await db
+      .from("players")
+      .update({
+        nome: nome
+      })
+      .eq("id", playerId)
+      .select("id,nome,pontos,is_admin")
+      .maybeSingle();
+
+    data = resposta.data;
+    error = resposta.error;
+
+  }
+
+
+  /* 🆕 PRIMEIRO SALVAMENTO */
+  if(!data){
+
+    const resposta = await db
+      .from("players")
+      .insert({
+        nome: nome,
+        pontos: 0
+      })
+      .select("id,nome,pontos,is_admin")
+      .single();
+
+    data = resposta.data;
+    error = resposta.error;
+
+  }
+
+
+  if(error){
+    throw error;
+  }
+
+
+  /* 💾 GUARDA O ID DO JOGADOR */
+  localStorage.setItem(
+    "playerId",
+    String(data.id)
+  );
+
+
+  /* 👑 GUARDA SE É ADM */
+  localStorage.setItem(
+    "isAdminSupabase",
+    data.is_admin ? "true" : "false"
+  );
+
+
+  console.log(
+    "✅ Jogador salvo no Supabase:",
+    data
+  );
+
+
+}catch(error){
+
+  console.error(
+    "❌ Erro ao salvar jogador:",
+    error
+  );
+
+  mensagemPerfil.style.color =
+    "#ff5555";
+
+  mensagemPerfil.textContent =
+    "❌ Erro ao salvar no servidor.";
+
+  return;
+
+  }
+
+    mensagemPerfil.style.color =
+      "#7CFF7C";
+
+    mensagemPerfil.textContent =
+      "✅ Perfil salvo!";
+
+    if(typeof atualizarAcessoADM === "function"){
+      atualizarAcessoADM();
+    }
+
+  }
+);
+
+
+/* =============================== */
+/* 📥 CARREGAR AO INICIAR */
+/* =============================== */
+
+carregarPerfil();
+
+if(typeof atualizarAcessoADM === "function"){
+  atualizarAcessoADM();
+}
+
+</script>
+  <!-- ====================================== -->
+<!-- 🫂 BOTÃO DE AMIGOS -->
+<!-- ====================================== -->
+
+<div id="botaoAmigos">🫂</div>
+
+<!-- ====================================== -->
+<!-- 👥 PAINEL DE AMIGOS -->
+<!-- ====================================== -->
+
+<div id="painelAmigos">
+
+  <div id="caixaAmigos">
+
+    <button id="fecharAmigos">✖</button>
+
+    <h2>👥 Amigos</h2>
+
+    <!-- SOLICITAR AMIZADE -->
+
+    <div id="solicitarAmizade">
+
+      <h3>➕ Adicionar amigo</h3>
+
+      <label>Nome da pessoa:</label>
+
+      <input
+        type="text"
+        id="nomeAmigo"
+        placeholder="Nome do jogador"
+        maxlength="20"
+      >
+
+      <label>Código da pessoa:</label>
+
+      <div id="codigoAmigoArea">
+
+        <span>#</span>
+
+        <input
+          type="text"
+          id="codigoAmigo"
+          placeholder="Código"
+          maxlength="8"
+        >
+
+      </div>
+
+      <button id="botaoSolicitar">
+        🤝 Solicitar amizade
+      </button>
+
+      <p id="mensagemAmigos"></p>
+
+    </div>
+
+
+    <!-- SOLICITAÇÕES -->
+
+    <div id="solicitacoesAmigos">
+
+      <h3>📩 Solicitações</h3>
+
+      <div id="listaSolicitacoes">
+
+        <p class="semSolicitacoes">
+          Nenhuma solicitação.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- AMIGOS -->
+
+    <div id="listaAmigosArea">
+
+      <h3>👥 Meus amigos</h3>
+
+      <div id="listaAmigos">
+
+        <p class="semAmigos">
+          Você ainda não tem amigos.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<style>
+
+/* ====================================== */
+/* 🫂 BOTÃO */
+/* ====================================== */
+
+#botaoAmigos{
+
+  position:fixed;
+
+  /*
+    👇 COLOQUE AQUI A MESMA POSIÇÃO
+    QUE O SEU BOTÃO ADM USA
+  */
+
+  right:15px;
+  top:185px;
+
+  width:52px;
+  height:52px;
+
+  background:#222;
+
+  border:2px solid #555;
+
+  border-radius:50%;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  font-size:27px;
+
+  z-index:99990;
+
+  cursor:pointer;
+
+  user-select:none;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.5);
+
+}
+
+
+#botaoAmigos:active{
+
+  transform:scale(.95);
+
+}
+
+
+/* ====================================== */
+/* 📋 PAINEL */
+/* ====================================== */
+
+#painelAmigos{
+
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,.75);
+
+  z-index:99989;
+
+  align-items:center;
+
+  justify-content:center;
+
+  padding:20px;
+
+}
+
+
+/* ====================================== */
+/* 📦 CAIXA */
+/* ====================================== */
+
+#caixaAmigos{
+
+  position:relative;
+
+  width:100%;
+
+  max-width:370px;
+
+  max-height:90vh;
+
+  overflow-y:auto;
+
+  background:#181818;
+
+  color:white;
+
+  border:2px solid #444;
+
+  border-radius:18px;
+
+  padding:25px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.7);
+
+  animation:abrirAmigos .2s ease;
+
+}
+
+
+@keyframes abrirAmigos{
+
+  from{
+
+    transform:scale(.8);
+
+    opacity:0;
+
+  }
+
+  to{
+
+    transform:scale(1);
+
+    opacity:1;
+
+  }
+
+}
+
+
+/* ====================================== */
+/* ❌ FECHAR */
+/* ====================================== */
+
+#fecharAmigos{
+
+  position:absolute;
+
+  right:12px;
+
+  top:12px;
+
+  width:32px;
+
+  height:32px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#333;
+
+  color:white;
+
+  font-size:16px;
+
+  cursor:pointer;
+
+}
+
+
+/* ====================================== */
+/* 📝 TÍTULO */
+/* ====================================== */
+
+#caixaAmigos h2{
+
+  text-align:center;
+
+  margin-top:5px;
+
+  margin-bottom:25px;
+
+}
+
+
+/* ====================================== */
+/* 📌 SUBTÍTULOS */
+/* ====================================== */
+
+#caixaAmigos h3{
+
+  margin-top:20px;
+
+  margin-bottom:12px;
+
+}
+
+
+/* ====================================== */
+/* 🏷️ LABEL */
+/* ====================================== */
+
+#caixaAmigos label{
+
+  display:block;
+
+  margin-top:12px;
+
+  margin-bottom:6px;
+
+  font-weight:bold;
+
+}
+
+
+/* ====================================== */
+/* ✏️ INPUT */
+/* ====================================== */
+
+#caixaAmigos input{
+
+  width:100%;
+
+  padding:12px;
+
+  border:none;
+
+  outline:none;
+
+  border-radius:10px;
+
+  background:#292929;
+
+  color:white;
+
+  font-size:16px;
+
+}
+
+
+#caixaAmigos input:focus{
+
+  outline:2px solid #555;
+
+}
+
+
+/* ====================================== */
+/* 🔢 CÓDIGO */
+/* ====================================== */
+
+#codigoAmigoArea{
+
+  display:flex;
+
+  align-items:center;
+
+  background:#292929;
+
+  border-radius:10px;
+
+  overflow:hidden;
+
+}
+
+
+#codigoAmigoArea span{
+
+  padding-left:13px;
+
+  font-size:18px;
+
+  font-weight:bold;
+
+}
+
+
+#codigoAmigoArea input{
+
+  background:transparent;
+
+  border-radius:0;
+
+}
+
+
+/* ====================================== */
+/* 🤝 BOTÃO SOLICITAR */
+/* ====================================== */
+
+#botaoSolicitar{
+
+  width:100%;
+
+  margin-top:18px;
+
+  padding:13px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#2962ff;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+
+#botaoSolicitar:active{
+
+  transform:scale(.97);
+
+}
+
+
+/* ====================================== */
+/* 💬 MENSAGEM */
+/* ====================================== */
+
+#mensagemAmigos{
+
+  text-align:center;
+
+  font-size:14px;
+
+  min-height:18px;
+
+}
+
+
+/* ====================================== */
+/* 📩 SOLICITAÇÃO */
+/* ====================================== */
+
+.solicitacaoAmigo{
+
+  background:#292929;
+
+  border-radius:12px;
+
+  padding:14px;
+
+  margin-bottom:10px;
+
+}
+
+
+.textoSolicitacao{
+
+  font-size:16px;
+
+  margin-bottom:12px;
+
+}
+
+
+.botoesSolicitacao{
+
+  display:flex;
+
+  gap:8px;
+
+}
+
+
+.botaoAceitar{
+
+  flex:1;
+
+  padding:10px;
+
+  border:none;
+
+  border-radius:8px;
+
+  background:#24a148;
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+
+.botaoRecusar{
+
+  flex:1;
+
+  padding:10px;
+
+  border:none;
+
+  border-radius:8px;
+
+  background:#d32f2f;
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+
+/* ====================================== */
+/* 👥 AMIGO */
+/* ====================================== */
+
+.amigoItem{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  background:#292929;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  margin-bottom:8px;
+
+}
+
+
+.amigoEmoji{
+
+  font-size:28px;
+
+}
+
+
+.amigoNome{
+
+  font-weight:bold;
+
+}
+
+
+.amigoCodigo{
+
+  color:#aaa;
+
+  font-size:13px;
+
+}
+
+
+.semAmigos,
+.semSolicitacoes{
+
+  text-align:center;
+
+  color:#888;
+
+  padding:10px;
+
+}
+
+</style>
+
+
+<script>
+
+/* ====================================== */
+/* 🔗 ELEMENTOS */
+/* ====================================== */
+
+const botaoAmigos =
+  document.getElementById("botaoAmigos");
+
+const painelAmigos =
+  document.getElementById("painelAmigos");
+
+const fecharAmigos =
+  document.getElementById("fecharAmigos");
+
+const nomeAmigo =
+  document.getElementById("nomeAmigo");
+
+const codigoAmigo =
+  document.getElementById("codigoAmigo");
+
+const botaoSolicitar =
+  document.getElementById("botaoSolicitar");
+
+const mensagemAmigos =
+  document.getElementById("mensagemAmigos");
+
+const listaSolicitacoes =
+  document.getElementById("listaSolicitacoes");
+
+const listaAmigos =
+  document.getElementById("listaAmigos");
+
+
+/* ====================================== */
+/* 🫂 ABRIR */
+/* ====================================== */
+
+botaoAmigos.addEventListener(
+  "click",
+  function(){
+
+    painelAmigos.style.display =
+      "flex";
+
+    atualizarSolicitacoes();
+
+    atualizarAmigos();
+
+  }
+);
+
+
+/* ====================================== */
+/* ❌ FECHAR */
+/* ====================================== */
+
+fecharAmigos.addEventListener(
+  "click",
+  function(){
+
+    painelAmigos.style.display =
+      "none";
+
+  }
+);
+
+
+/* ====================================== */
+/* 📦 PEGAR SOLICITAÇÕES */
+/* ====================================== */
+
+function pegarSolicitacoes(){
+
+  return JSON.parse(
+    localStorage.getItem(
+      "solicitacoesAmigos"
+    ) || "[]"
+  );
+
+}
+
+
+/* ====================================== */
+/* 👥 PEGAR AMIGOS */
+/* ====================================== */
+
+function pegarAmigos(){
+
+  return JSON.parse(
+    localStorage.getItem(
+      "meusAmigos"
+    ) || "[]"
+  );
+
+}
+
+
+/* ====================================== */
+/* 🤝 SOLICITAR */
+/* ====================================== */
+
+botaoSolicitar.addEventListener(
+  "click",
+  function(){
+
+    const nome =
+      nomeAmigo.value.trim();
+
+    const codigo =
+      codigoAmigo.value.trim();
+
+
+    if(!nome){
+
+      mensagemAmigos.style.color =
+        "#ff5555";
+
+      mensagemAmigos.textContent =
+        "❌ Digite o nome!";
+
+      return;
+
+    }
+
+
+    if(!codigo){
+
+      mensagemAmigos.style.color =
+        "#ff5555";
+
+      mensagemAmigos.textContent =
+        "❌ Digite o código!";
+
+      return;
+
+    }
+
+
+    if(!/^[0-9]+$/.test(codigo)){
+
+      mensagemAmigos.style.color =
+        "#ff5555";
+
+      mensagemAmigos.textContent =
+        "❌ O código deve ter apenas números!";
+
+      return;
 
     }
 
 
     /*
-    =====================================
-    COLOQUE AQUI O NÚMERO DA SUA MÃE
+      Aqui a solicitação é criada.
 
-    Exemplo:
-    5511999999999
-
-    NÃO coloque:
-    +55
-    espaços
-    parênteses
-    traços
-    =====================================
+      ⚠️ Atualmente fica salva apenas
+      neste navegador.
     */
 
-    const numeroWhatsApp =
-        "5521988301667";
+    const solicitacoes =
+      pegarSolicitacoes();
 
 
-    if (numeroWhatsApp === "") {
-    alert("⚠️ O número do WhatsApp ainda não foi configurado.");
+    solicitacoes.push({
+
+      nome:nome,
+
+      codigo:codigo,
+
+      emoji:"👤"
+
+    });
+
+
+    localStorage.setItem(
+      "solicitacoesAmigos",
+      JSON.stringify(solicitacoes)
+    );
+
+
+    mensagemAmigos.style.color =
+      "#7CFF7C";
+
+    mensagemAmigos.textContent =
+      "✅ Solicitação criada!";
+
+
+    nomeAmigo.value = "";
+
+    codigoAmigo.value = "";
+
+
+    atualizarSolicitacoes();
+
+  }
+);
+
+
+/* ====================================== */
+/* 📩 MOSTRAR SOLICITAÇÕES */
+/* ====================================== */
+
+function atualizarSolicitacoes(){
+
+  const solicitacoes =
+    pegarSolicitacoes();
+
+
+  listaSolicitacoes.innerHTML = "";
+
+
+  if(solicitacoes.length === 0){
+
+    listaSolicitacoes.innerHTML =
+      '<p class="semSolicitacoes">Nenhuma solicitação.</p>';
+
     return;
+
+  }
+
+
+  solicitacoes.forEach(
+    function(solicitacao,index){
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "solicitacaoAmigo";
+
+
+      div.innerHTML = `
+
+        <div class="textoSolicitacao">
+
+          "${solicitacao.nome}" quer ter sua amizade. 👤
+
+        </div>
+
+        <div class="botoesSolicitacao">
+
+          <button
+            class="botaoAceitar"
+            onclick="aceitarAmizade(${index})"
+          >
+            Aceita!
+          </button>
+
+          <button
+            class="botaoRecusar"
+            onclick="recusarAmizade(${index})"
+          >
+            Recusar.
+          </button>
+
+        </div>
+
+      `;
+
+
+      listaSolicitacoes.appendChild(div);
+
     }
-
-
-    const mensagem =
-
-        "📦 NOVA ENCOMENDA - HUGO UGGO\n\n" +
-
-        "🧸 Produto: " +
-        produtoSelecionado +
-        "\n" +
-
-        "💰 Preço: R$ " +
-        precoSelecionado +
-        "\n" +
-
-        "💳 Pagamento: " +
-        pagamento +
-        "\n\n" +
-
-        "🏠 ENDEREÇO\n" +
-
-        "Rua: " +
-        rua +
-        "\n" +
-
-        "Número: " +
-        numero +
-        "\n" +
-
-        "Bairro/Região: " +
-        regiao +
-        "\n" +
-
-        "Cidade: " +
-        cidade +
-        "\n\n" +
-
-        "💵 Pagamento na entrega.";
-
-
-    const url =
-
-        "https://wa.me/" +
-        numeroWhatsApp +
-        "?text=" +
-        encodeURIComponent(
-            mensagem
-        );
-
-
-    window.open(
-        url,
-        "_blank"
-    );
+  );
 
 }
 
 
-/* =====================================
-   PÁGINA DOS HUGOS
-===================================== */
+/* ====================================== */
+/* ✅ ACEITAR */
+/* ====================================== */
 
-function mostrarHugos() {
+function aceitarAmizade(index){
 
-    document.getElementById(
-        "loja"
-    ).style.display = "none";
+  const solicitacoes =
+    pegarSolicitacoes();
 
-
-    document.getElementById(
-        "paginaHugos"
-    ).style.display = "block";
+  const solicitacao =
+    solicitacoes[index];
 
 
-    window.scrollTo(
-        0,
-        0
-    );
+  const amigos =
+    pegarAmigos();
+
+
+  amigos.push({
+
+    nome:
+      solicitacao.nome,
+
+    codigo:
+      solicitacao.codigo,
+
+    emoji:
+      solicitacao.emoji || "👤"
+
+  });
+
+
+  localStorage.setItem(
+    "meusAmigos",
+    JSON.stringify(amigos)
+  );
+
+
+  solicitacoes.splice(
+    index,
+    1
+  );
+
+
+  localStorage.setItem(
+    "solicitacoesAmigos",
+    JSON.stringify(solicitacoes)
+  );
+
+
+  atualizarSolicitacoes();
+
+  atualizarAmigos();
+
+  if(typeof atualizarSeletoresADM === "function"){
+    atualizarSeletoresADM();
+  }
 
 }
 
 
-function voltarLoja() {
+/* ====================================== */
+/* ❌ RECUSAR */
+/* ====================================== */
 
-    document.getElementById(
-        "paginaHugos"
-    ).style.display = "none";
+function recusarAmizade(index){
 
-
-    document.getElementById(
-        "loja"
-    ).style.display = "block";
+  const solicitacoes =
+    pegarSolicitacoes();
 
 
-    window.scrollTo(
-        0,
-        0
-    );
+  solicitacoes.splice(
+    index,
+    1
+  );
+
+
+  localStorage.setItem(
+    "solicitacoesAmigos",
+    JSON.stringify(solicitacoes)
+  );
+
+
+  atualizarSolicitacoes();
 
 }
 
 
-/* =====================================
-   PERFIL
-===================================== */
+/* ====================================== */
+/* 👥 MOSTRAR AMIGOS */
+/* ====================================== */
 
-const emojisPerfil = [
+function atualizarAmigos(){
 
-    "😍",
-    "😎",
-    "😄",
-    "😜",
-    "😠",
-    "🫨",
-    "🥴",
-    "🤑",
-    "💩",
-    "👻",
-    "👽",
-    "🥸",
-    "😺",
-    "🙉"
+  const amigos =
+    pegarAmigos();
+
+
+  listaAmigos.innerHTML = "";
+
+
+  if(amigos.length === 0){
+
+    listaAmigos.innerHTML =
+      '<p class="semAmigos">Você ainda não tem amigos.</p>';
+
+    return;
+
+  }
+
+
+  amigos.forEach(
+    function(amigo){
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "amigoItem";
+
+
+      div.innerHTML = `
+
+        <div class="amigoEmoji">
+
+          ${amigo.emoji || "👤"}
+
+        </div>
+
+        <div>
+
+          <div class="amigoNome">
+
+            ${amigo.nome}
+
+          </div>
+
+          <div class="amigoCodigo">
+
+            #${amigo.codigo}
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      listaAmigos.appendChild(div);
+
+    }
+  );
+
+}
+
+</script>
+  <!-- 🏆 BOTÃO RANKING GLOBAL -->
+<button id="botaoRanking" onclick="abrirRanking()">🏆</button>
+
+<!-- 🏆 PAINEL DO RANKING -->
+<div id="painelRanking">
+  <div id="rankingCaixa">
+
+    <button id="fecharRanking" onclick="fecharRanking()">✖</button>
+
+    <h2>🏆 RANKING GLOBAL</h2>
+    <p id="rankingAviso">TOP 10 • Mínimo: 1.000 PT</p>
+
+    <div id="listaRanking"></div>
+
+  </div>
+</div>
+
+<style>
+/* BOTÃO NO CANTO SUPERIOR ESQUERDO */
+#botaoRanking{
+  position:fixed;
+  top:10px;
+  left:10px;
+
+  width:45px;
+  height:45px;
+
+  border:none;
+  border-radius:12px;
+
+  background:#222;
+  color:white;
+
+  font-size:22px;
+  cursor:pointer;
+
+  z-index:9998;
+  box-shadow:0 3px 10px #0008;
+}
+
+/* FUNDO DO PAINEL */
+#painelRanking{
+  display:none;
+
+  position:fixed;
+  inset:0;
+
+  background:#0009;
+
+  z-index:9999;
+
+  align-items:center;
+  justify-content:center;
+}
+
+/* CAIXA DO RANKING */
+#rankingCaixa{
+  width:92%;
+  max-width:500px;
+
+  max-height:85vh;
+  overflow-y:auto;
+
+  background:#181818;
+  color:white;
+
+  border-radius:18px;
+  padding:20px;
+
+  box-shadow:0 0 30px #000;
+}
+
+#rankingCaixa h2{
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
+#rankingAviso{
+  color:#aaa;
+  font-size:13px;
+}
+
+/* BOTÃO FECHAR */
+#fecharRanking{
+  float:right;
+
+  border:none;
+  background:#333;
+  color:white;
+
+  border-radius:8px;
+
+  padding:7px 10px;
+  font-size:15px;
+}
+
+/* CADA JOGADOR */
+.jogadorRanking{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  background:#242424;
+
+  margin:7px 0;
+  padding:10px;
+
+  border-radius:10px;
+
+  text-align:left;
+}
+
+.posicaoRanking{
+  width:30px;
+  font-weight:bold;
+}
+
+.nomeRanking{
+  flex:1;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.patenteRanking{
+  font-size:13px;
+  color:#ddd;
+}
+
+.ptRanking{
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+/* DESTAQUES */
+.primeiroLugar{
+  border:2px solid gold;
+}
+
+.segundoLugar{
+  border:2px solid silver;
+}
+
+.terceiroLugar{
+  border:2px solid #cd7f32;
+}
+</style>
+
+<>
+
+/* ==========================================
+   🏆 DADOS DO RANKING
+   ========================================== */
+
+/*
+   ⚠️ POR ENQUANTO SÃO JOGADORES DE TESTE.
+
+   Depois vamos trocar esta parte pelo banco
+   de dados online para aparecerem jogadores reais.
+*/
+
+let jogadoresRanking = [
+
+  {
+    nome:"Vazio",
+    pt:100000000000,
+    patente:"Mestre! 🏅"
+  },
+
+  {
+    nome:"Vazio",
+    pt:321000000,
+    patente:"Diamante 🥇"
+  },
+
+  {
+    nome:"Vazio",
+    pt:543000,
+    patente:"Platina 🥈"
+  },
+
+  {
+    nome:"Vazio",
+    pt:89000,
+    patente:"Ouro 🥉"
+  },
+
+  {
+    nome:"Vazio",
+    pt:45000,
+    patente:"prata"
+  },
+
+  {
+    nome:"Vazio",
+    pt:32000,
+    patente:"Prata"
+  },
+
+  {
+    nome:"Vazio",
+    pt:15000,
+    patente:"Bronze"
+  },
+
+  {
+    nome:"Vazio",
+    pt:9000,
+    patente:"Bronze"
+  },
+
+  {
+    nome:"Vazio",
+    pt:5000,
+    patente:"Bronze"
+  },
+
+  {
+    nome:"Vazio",
+    pt:2000,
+    patente:"Bronze"
+  }
 
 ];
 
 
-let emojiAtualPerfil = 0;
+/* ==========================================
+   🔢 FORMATA PT
+   ========================================== */
+
+function formatarPTRanking(numero){
+
+  if(numero >= 1e12)
+    return (numero / 1e12).toFixed(1).replace(".0","") + "T";
+
+  if(numero >= 1e9)
+    return (numero / 1e9).toFixed(1).replace(".0","") + "B";
+
+  if(numero >= 1e6)
+    return (numero / 1e6).toFixed(1).replace(".0","") + "M";
+
+  if(numero >= 1000)
+    return (numero / 1000).toFixed(1).replace(".0","") + "Mil";
+
+  return numero + "";
+}
 
 
-function atualizarEmojiPerfil() {
+/* ==========================================
+   🏅 DESENHAR RANKING
+   ========================================== */
 
+function atualizarRanking(){
+
+  let lista = document.getElementById("listaRanking");
+
+  lista.innerHTML = "";
+
+  /* Só entra quem tem 1.000 PT ou mais */
+  let jogadoresValidos = jogadoresRanking.filter(
+    jogador => jogador.pt >= 1000
+  );
+
+  /* Maior PT primeiro */
+  jogadoresValidos.sort(
+    (a,b) => b.pt - a.pt
+  );
+
+  /* Só os 10 primeiros */
+  jogadoresValidos =
+    jogadoresValidos.slice(0,10);
+
+
+  jogadoresValidos.forEach(
+    (jogador,index) => {
+
+      let posicao = index + 1;
+
+<!-- ================================= -->
+<!-- 🏆 RANKING GLOBAL -->
+<!-- ================================= -->
+
+<style>
+
+/* 🏆 BOTÃO DO RANKING */
+#botaoRankingGlobal{
+  position:fixed;
+  top:8px;
+  left:8px;
+
+  z-index:99999;
+
+  width:48px;
+  height:48px;
+
+  border:none;
+  border-radius:12px;
+
+  background:#222;
+  color:white;
+
+  font-size:24px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 3px 10px rgba(0,0,0,.6);
+
+  cursor:pointer;
+}
+
+
+/* 🌑 FUNDO */
+#painelRankingGlobal{
+  display:none;
+
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+
+  z-index:100000;
+
+  background:rgba(0,0,0,.78);
+
+  align-items:center;
+  justify-content:center;
+
+  padding:15px;
+}
+
+
+/* 🏆 CAIXA */
+#caixaRankingGlobal{
+  width:100%;
+  max-width:430px;
+
+  max-height:85vh;
+
+  overflow:hidden;
+
+  background:#111;
+
+  color:white;
+
+  border:2px solid #333;
+
+  border-radius:20px;
+
+  box-shadow:0 15px 50px rgba(0,0,0,.8);
+}
+
+
+/* TÍTULO */
+#cabecalhoRankingGlobal{
+  position:relative;
+
+  padding:20px 50px 16px;
+
+  text-align:center;
+
+  border-bottom:1px solid #292929;
+}
+
+#tituloRankingGlobal{
+  margin:0;
+
+  color:#ffd700;
+
+  font-size:23px;
+
+  font-weight:900;
+}
+
+#subtituloRankingGlobal{
+  margin-top:5px;
+
+  color:#888;
+
+  font-size:12px;
+}
+
+
+/* ❌ FECHAR */
+#fecharRankingGlobal{
+  position:absolute;
+
+  right:12px;
+  top:12px;
+
+  width:34px;
+  height:34px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#292929;
+
+  color:white;
+
+  font-size:18px;
+
+  cursor:pointer;
+}
+
+
+/* 📋 LISTA */
+#listaRankingGlobal{
+  padding:12px;
+
+  max-height:55vh;
+
+  overflow-y:auto;
+}
+
+
+/* 👤 JOGADOR */
+.itemRankingGlobal{
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  padding:12px;
+
+  margin-bottom:8px;
+
+  border-radius:13px;
+
+  background:#181818;
+
+  border:1px solid #292929;
+}
+
+
+/* 🥇 TOP 3 */
+.itemRankingGlobal.primeiro{
+  background:#302600;
+  border-color:#8d7200;
+}
+
+.itemRankingGlobal.segundo{
+  background:#292929;
+  border-color:#777;
+}
+
+.itemRankingGlobal.terceiro{
+  background:#301b0d;
+  border-color:#78451f;
+}
+
+
+/* POSIÇÃO */
+.posicaoRanking{
+  width:35px;
+
+  text-align:center;
+
+  font-size:18px;
+
+  font-weight:bold;
+}
+
+
+/* NOME + PATENTE */
+.infoJogadorRanking{
+  flex:1;
+
+  min-width:0;
+
+  text-align:left;
+}
+
+.nomeJogadorRanking{
+  font-size:16px;
+
+  font-weight:bold;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+.patenteJogadorRanking{
+  margin-top:3px;
+
+  color:#aaa;
+
+  font-size:12px;
+}
+
+
+/* 💰 PONTOS */
+.pontosJogadorRanking{
+  color:#ffd700;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  white-space:nowrap;
+}
+
+
+/* ⏳ AGUARDANDO */
+.aguardandoRanking{
+  padding:40px 10px;
+
+  text-align:center;
+
+  color:#aaa;
+
+  font-size:20px;
+
+  font-weight:bold;
+}
+
+
+/* RODAPÉ */
+#rodapeRankingGlobal{
+  padding:12px;
+
+  text-align:center;
+
+  color:#666;
+
+  font-size:11px;
+
+  border-top:1px solid #292929;
+}
+
+</style>
+
+
+<!-- 🏆 ÚNICO BOTÃO -->
+<button
+  id="botaoRankingGlobal"
+  onclick="abrirRankingGlobal()">
+  🏆
+</button>
+
+
+<!-- 🏆 PAINEL DO RANKING -->
+
+<div id="painelRankingGlobal">
+
+  <div id="caixaRankingGlobal">
+
+    <div id="cabecalhoRankingGlobal">
+
+      <h2 id="tituloRankingGlobal">
+        RANKING GLOBAL! 🏆
+      </h2>
+
+      <div id="subtituloRankingGlobal">
+        TOP 10 JOGADORES
+      </div>
+
+      <button
+        id="fecharRankingGlobal"
+        onclick="fecharRankingGlobal()">
+        ✕
+      </button>
+
+    </div>
+
+
+    <div id="listaRankingGlobal">
+
+      <div class="aguardandoRanking">
+        🕐 Aguardando...
+      </div>
+
+    </div>
+
+
+    <div id="rodapeRankingGlobal">
+      🌎 Ranking Global
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* ================================= */
+/* 🏅 PATENTES */
+/* ================================= */
+
+function patenteRankingGlobal(posicao){
+
+  if(posicao === 1)
+    return "Mestre 👑";
+
+  if(posicao === 2)
+    return "Diamante 🏅";
+
+  if(posicao === 3)
+    return "Platina 🥇";
+
+  if(posicao === 4)
+    return "Ouro 🥈";
+
+  if(posicao === 5)
+    return "Ferro 🥉";
+
+  return "Bronze";
+}
+
+
+/* ================================= */
+/* 💰 FORMATAR PONTOS */
+/* ================================= */
+
+function formatarPontosRankingGlobal(numero){
+
+  numero = Number(numero) || 0;
+
+  if(numero >= 1e12)
+    return (numero / 1e12).toFixed(1)
+      .replace(".0","") + " Trilhões";
+
+  if(numero >= 1e9)
+    return (numero / 1e9).toFixed(1)
+      .replace(".0","") + " Bilhões";
+
+  if(numero >= 1e6)
+    return (numero / 1e6).toFixed(1)
+      .replace(".0","") + " Milhões";
+
+  if(numero >= 1000)
+    return (numero / 1000).toFixed(1)
+      .replace(".0","") + " Mil";
+
+  return numero + " PT";
+}
+
+
+/* ================================= */
+/* 🏆 ABRIR */
+/* ================================= */
+
+async function abrirRankingGlobal(){
+
+  const painel =
     document.getElementById(
-        "emojiPerfil"
-    ).textContent =
-        emojisPerfil[
-            emojiAtualPerfil
-        ];
+      "painelRankingGlobal"
+    );
 
+  painel.style.display = "flex";
+
+  await carregarRankingGlobal();
 }
 
 
-function proximoEmojiPerfil() {
+/* ================================= */
+/* ❌ FECHAR */
+/* ================================= */
 
-    if (
-        emojiAtualPerfil <
-        emojisPerfil.length - 1
-    ) {
+function fecharRankingGlobal(){
 
-        emojiAtualPerfil++;
-
-        atualizarEmojiPerfil();
-
-    }
-
+  document.getElementById(
+    "painelRankingGlobal"
+  ).style.display = "none";
 }
 
 
-function emojiAnteriorPerfil() {
+/* ================================= */
+/* 🌎 CARREGAR SUPABASE */
+/* ================================= */
 
-    if (
-        emojiAtualPerfil > 0
-    ) {
+async function carregarRankingGlobal(){
 
-        emojiAtualPerfil--;
-
-        atualizarEmojiPerfil();
-
-    }
-
-}
-
-
-function confirmarPerfil() {
-
-    const nome =
-        document.getElementById(
-            "nomePerfil"
-        ).value.trim();
-
-
-    const sobrenome =
-        document.getElementById(
-            "sobrenomePerfil"
-        ).value.trim();
-
-
-    const erro =
-        document.getElementById(
-            "erroPerfil"
-        );
-
-
-    if (
-        nome === ""
-    ) {
-
-        erro.style.color =
-            "#ff5555";
-
-        erro.textContent =
-            "⚠️ Digite seu nome.";
-
-        return;
-
-    }
-
-
-    localStorage.setItem(
-        "nomeUsuario",
-        nome
+  const lista =
+    document.getElementById(
+      "listaRankingGlobal"
     );
 
 
-    localStorage.setItem(
-        "sobrenomeUsuario",
-        sobrenome
+  lista.innerHTML = `
+    <div class="aguardandoRanking">
+      ⏳ Carregando...
+    </div>
+  `;
+
+
+  try{
+
+    /* 🔄 SALVAR PONTOS ATUAIS */
+
+    if(
+      typeof salvarPontosRankingNovo ===
+      "function"
+    ){
+
+      await salvarPontosRankingNovo();
+
+    }
+
+
+    /* ☁️ VERIFICAR SUPABASE */
+
+    if(typeof db === "undefined"){
+
+      throw new Error(
+        "Supabase não carregado."
+      );
+
+    }
+
+
+    /* 🏆 PEGAR TOP 10 */
+
+    const resposta = await db
+      .from("players")
+      .select("nome,pontos")
+      .gte("pontos",1000)
+      .order("pontos",{ascending:false})
+      .limit(10);
+
+
+    if(resposta.error){
+
+      throw resposta.error;
+
+    }
+
+
+    const jogadores =
+      resposta.data || [];
+
+
+    /* NENHUM JOGADOR */
+
+    if(jogadores.length === 0){
+
+      lista.innerHTML = `
+        <div class="aguardandoRanking">
+          🕐 Aguardando...
+        </div>
+      `;
+
+      return;
+    }
+
+
+    lista.innerHTML = "";
+
+
+    /* 👤 MOSTRAR JOGADORES */
+
+    jogadores.forEach(
+      (jogador,index)=>{
+
+        const posicao =
+          index + 1;
+
+
+        let medalha =
+          posicao + "º";
+
+
+        if(posicao === 1)
+          medalha = "🥇";
+
+        else if(posicao === 2)
+          medalha = "🥈";
+
+        else if(posicao === 3)
+          medalha = "🥉";
+
+
+        let classe = "";
+
+
+        if(posicao === 1)
+          classe = "primeiro";
+
+        else if(posicao === 2)
+          classe = "segundo";
+
+        else if(posicao === 3)
+          classe = "terceiro";
+
+
+        const nome =
+          jogador.nome || "Jogador";
+
+
+        const pontos =
+          Number(jogador.pontos) || 0;
+
+
+        const patente =
+          patenteRankingGlobal(posicao);
+
+
+        const pontosFormatados =
+          formatarPontosRankingGlobal(
+            pontos
+          );
+
+
+        lista.innerHTML += `
+
+          <div class="
+            itemRankingGlobal ${classe}
+          ">
+
+            <div class="posicaoRanking">
+              ${medalha}
+            </div>
+
+            <div class="infoJogadorRanking">
+
+              <div class="nomeJogadorRanking">
+                ${nome}
+              </div>
+
+              <div class="patenteJogadorRanking">
+                ${patente}
+              </div>
+
+            </div>
+
+            <div class="pontosJogadorRanking">
+              ${pontosFormatados}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+  }
+
+  catch(erro){
+
+    console.error(
+      "Erro no Ranking Global:",
+      erro
     );
 
 
-    localStorage.setItem(
-        "emojiUsuario",
-        emojisPerfil[
-            emojiAtualPerfil
-        ]
-    );
+    lista.innerHTML = `
 
+      <div class="aguardandoRanking">
 
-    erro.style.color =
-        "#25D366";
+        ❌ Erro ao carregar
 
-    erro.textContent =
-        "✅ Seu perfil foi salvo!";
+        <br>
 
+        <span style="
+          font-size:12px;
+          color:#666;
+          font-weight:normal;
+        ">
+          Tente novamente.
+        </span>
 
-    atualizarPerfilLoja();
+      </div>
+
+    `;
+
+  }
 
 }
 
 
-/* =====================================
-   ATUALIZAR PERFIL NA LOJA
-===================================== */
+/* ================================= */
+/* 👆 FECHAR CLICANDO FORA */
+/* ================================= */
 
-function atualizarPerfilLoja() {
+document
+  .getElementById("painelRankingGlobal")
+  .addEventListener(
+    "click",
+    function(event){
 
-    const emoji =
-        localStorage.getItem(
-            "emojiUsuario"
-        );
+      if(event.target === this){
 
+        fecharRankingGlobal();
 
-    const nome =
-        localStorage.getItem(
-            "nomeUsuario"
-        );
-
-
-    const sobrenome =
-        localStorage.getItem(
-            "sobrenomeUsuario"
-        );
-
-
-    if (emoji) {
-
-        document.getElementById(
-            "emojiLoja"
-        ).textContent =
-            emoji;
+      }
 
     }
-
-
-    if (nome) {
-
-        let nomeCompleto =
-            nome;
-
-
-        if (sobrenome) {
-
-            nomeCompleto +=
-                " " +
-                sobrenome;
-
-        }
-
-
-        document.getElementById(
-            "nomeLoja"
-        ).textContent =
-            nomeCompleto;
-
-    }
-
-}
-
-
-/* =====================================
-   CARREGAR PERFIL
-===================================== */
-
-window.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        atualizarPerfilLoja();
-
-    }
-);
+  );
 
 </script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    
+  </script>
+  <script>
+const SUPABASE_URL = "https://jxsrwqxserdbnotscjzv.supabase.co";
+const SUPABASE_KEY = "sb_publishable_8o722hOIRtjDnYusgr8fLg_Eg_e5TS9";
+</script>
+<script>
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+</script>
+  
 </body>
 </html>
